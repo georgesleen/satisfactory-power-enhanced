@@ -1,0 +1,9 @@
+/.direnv/
+/result
+/result-*
+/Binaries/
+/Intermediate/
+/Saved/
+/DerivedDataCache/
+/compile_commands.json
+/assets/*/renders/animation/
