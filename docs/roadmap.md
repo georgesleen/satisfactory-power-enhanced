@@ -19,7 +19,10 @@ earlier one work.
 - Tier capacities.
 - Transmission loss by length, load, and tier.
 - Local overload: heat warning, then a trip of the overloaded element only.
+- Capacitor banks for pulsing machines.
 - Superconducting lines with cryo stations that consume a cooling supply.
+- Zipline speed by tier.
+- Ambient feedback: lights dim and flicker, lines sag and hum, trips flash.
 - Diagnostic tool and load overlay.
 - Unlocks tied to the vanilla milestones.
 
@@ -29,6 +32,8 @@ earlier one work.
 - Generator ramp rates: base load and peaker plants.
 - Black start: a small generator or battery bank to restart a dead grid.
 - Load shedding that extends the vanilla priority switch.
+- Regenerative braking on railways.
+- Power Engineering MAM research tree.
 - Frequency and inertia, if they stay readable in play.
 
 ## Phase 3: late game and buildings

@@ -44,6 +44,9 @@ LV connector. When the player unlocks trains, the rail network becomes the
 transmission backbone: a station can power an outpost from a central power
 plant, so each outpost does not need its own plant.
 
+A train that goes downhill feeds power back into the railway (regenerative
+braking). A mountain line becomes a small power source.
+
 ### Tier-islands
 
 A tier-island is a set of connected lines and buildings on one tier.
@@ -69,6 +72,13 @@ transformer is only a cost.
 An overloaded island or transformer heats up visibly. After a delay, only that
 island or transformer trips. Vanilla trips the whole circuit instead.
 
+### Load spikes and capacitor banks
+
+The particle accelerator, converter, and quantum encoder pulse their power
+draw. The overload check uses the peak load, so pulses can push an island over
+capacity. A capacitor bank on an island absorbs the pulses: it charges below
+the average load and discharges at the peak.
+
 ### Superconductors
 
 Late-game wire (Tier 8 or 9) with zero loss and very high capacity. It is the
@@ -78,10 +88,26 @@ Superconducting lines need cooling. Cryo stations along the line consume a
 cooling supply (nitrogen or Cooling Systems). A line without cooling acts as a
 normal line with high loss.
 
+A pioneer on a zipline moves faster on a higher tier. On an SC line, the
+zipline is fast travel.
+
 ### Diagnostic tool and overlay
 
 A handheld tool shows the tier, load, and loss of the line or building the
 player looks at. An overlay colors lines by the load on their island.
+
+### Ambient feedback
+
+- Lights on an island dim when the island nears capacity and flicker before a
+  trip.
+- Lines sag and hum more as load rises. Transformers buzz louder as they heat.
+- A trip makes an arc flash and a bang.
+
+### Power Engineering research
+
+A MAM research tree holds optional upgrades: lower loss, more tolerance before
+a trip, higher transformer ratings, and breakers that reclose automatically.
+Depth that not every player wants goes here, so the base rules stay simple.
 
 ## Constraints
 
