@@ -149,6 +149,7 @@ The MSVC bootstrap uses the Microsoft license acceptance explicitly approved
 for this setup. It does not authorize acceptance of unrelated licenses.
 `nix/wwise-source.json` records the authenticated payload's content hash after
 import and is part of the reproducible source lock, not a credential file.
+`make import-wwise` stages it, so `use flake .` in direnv sees it; commit it.
 
 `make wine-prefix` initializes the disposable Wine prefix with upstream's
 `WINEDLLOVERRIDES=mscoree,mshtml=` and without a display. It does not download

@@ -92,7 +92,7 @@ Blender source animation; they still need an Unreal rig/state/material implement
 
 ## Visual references and provenance
 
-Reviewed official wiki building images and descriptions on 2026-10-14:
+Official wiki building images and descriptions used as style references:
 
 - [Power Storage](https://satisfactory.wiki.gg/wiki/Power_Storage),
   [building image](https://satisfactory.wiki.gg/images/Power_Storage.png): strong

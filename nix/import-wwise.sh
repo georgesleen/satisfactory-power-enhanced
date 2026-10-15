@@ -10,4 +10,6 @@ tar --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner \
 read -r hash _ < <(sha256sum "$archive")
 nix-store --add-fixed sha256 "$archive"
 printf '{"sha256":"%s","sdkVersion":"2025.1.6.9117","integrationVersion":"2025.1.6.4248"}\n' "$hash" > nix/wwise-source.json
-printf 'Wwise source imported; retain nix/wwise-source.json as its reproducible lock.\n'
+# Git flakes (direnv `use flake .`) only see files in the Git index.
+git add nix/wwise-source.json
+printf 'Wwise source imported; nix/wwise-source.json is staged as its lock.\n'

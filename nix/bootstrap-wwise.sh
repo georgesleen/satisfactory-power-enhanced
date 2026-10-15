@@ -19,11 +19,13 @@ if [[ -z "${WWISE_PASSWORD:-}" ]]; then
   printf '\n'
 fi
 export WWISE_EMAIL WWISE_PASSWORD
-# Upstream prints signed download URLs; keep them out of shared logs.
-nix run "path:$repo#wwise-cli" -- --cache-dir "$root/cache/wwise-cli" download \
+# Upstream prints signed download URLs on stdout and in errors; keep them out of logs.
+redact() { sed -E 's#https?://[^[:space:]"]+#<url redacted>#g' >&2; }
+{ nix run "path:$repo#wwise-cli" -- --cache-dir "$root/cache/wwise-cli" download \
   --sdk-version 2025.1.6.9117 --filter Packages=SDK \
   --filter DeploymentPlatforms=Windows_vc160 --filter DeploymentPlatforms=Windows_vc170 \
-  --filter DeploymentPlatforms=Linux --filter DeploymentPlatforms= > /dev/null
-nix run "path:$repo#wwise-cli" -- --cache-dir "$root/cache/wwise-cli" integrate-ue \
-  --integration-version 2025.1.6.4248 --project "$root/bootstrap/wwise-project/FactoryGame.uproject" > /dev/null
+  --filter DeploymentPlatforms=Linux --filter DeploymentPlatforms= 2>&1 > /dev/null; } | redact
+{ nix run "path:$repo#wwise-cli" -- --cache-dir "$root/cache/wwise-cli" integrate-ue \
+  --integration-version 2025.1.6.4248 \
+  --project "$root/bootstrap/wwise-project/FactoryGame.uproject" 2>&1 > /dev/null; } | redact
 printf 'Wwise payload ready. Run make import-wwise.\n'

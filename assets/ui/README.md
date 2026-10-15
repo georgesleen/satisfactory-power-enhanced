@@ -14,7 +14,7 @@ Open <http://127.0.0.1:8765/>. Stop with Ctrl+C. Source: `index.html`, `terminal
 
 ## Visual references
 
-These actual wiki-hosted game screenshots were opened and visually inspected in Chromium before redesigning the menu. They are references, not runtime assets or claims of game integration:
+These wiki-hosted game screenshots are visual references, not runtime assets or claims of game integration:
 
 - [Power pole interface](https://satisfactory.wiki.gg/images/Power_pole_-_graph.png), from the [official wiki Power page](https://satisfactory.wiki.gg/wiki/Power): a large white plotting surface, simple colored graph legend/readings beneath it, and a compact adjacent storage module. This drives the default view's graph-first structure and three plain-language totals.
 - [Pipeline interface](https://satisfactory.wiki.gg/images/Pipeline_Water_content.png), from [Pipelines](https://satisfactory.wiki.gg/wiki/Pipelines): grouped physical gauge/readout/control modules, a thin window titlebar, and pale value plates. This drives the separate connection module, visual transformer illustration, simple heat bar, and capacitor readout. No copied dial or flush control is used.
