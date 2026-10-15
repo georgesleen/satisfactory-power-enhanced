@@ -16,9 +16,25 @@
 - Distance loss lowers the capacity of a whole circuit by its size, not the
   loss along each line.
 - The repository has no license, so its code cannot be reused.
+- Small user base: about 1.4k downloads in October 2026, in the bottom quarter
+  of ficsit.app mods by downloads.
 
 This mod differs from TrueGrid in its core rule: no tiers or current types on
 machines, and no generator cap.
+
+### Satisfactory Plus
+
+[ficsit.app](https://ficsit.app/mod/SatisfactoryPlus). A full overhaul in
+alpha, about 250k downloads in October 2026. Target host for this mod.
+
+- Needs a new save.
+- Replaces most recipes and adds new ores and production chains.
+- Rebuilds power generation on Refined Power; does not change transmission.
+- Keeps tiers 0 to 9 and adds a tier 10.
+- Turns off conflicting mods automatically; other mods load but have no
+  support.
+- Cross-mod compatibility uses KPatchwork packs built on KDataForge.
+- No multiplayer support yet.
 
 ### Adjacent mods
 

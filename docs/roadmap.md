@@ -14,10 +14,12 @@ earlier one work.
 ## Phase 1: critical path (MVP)
 
 - MV and HV wires and poles. The vanilla line is LV.
+- Railways as HV lines, with a built-in transformer in each train station.
 - Transformers with a MW rating.
 - Tier capacities.
 - Transmission loss by length, load, and tier.
 - Local overload: heat warning, then a trip of the overloaded element only.
+- Superconducting lines with cryo stations that consume a cooling supply.
 - Diagnostic tool and load overlay.
 - Unlocks tied to the vanilla milestones.
 
@@ -31,7 +33,6 @@ earlier one work.
 
 ## Phase 3: late game and buildings
 
-- Superconducting lines.
 - Substation buildings and parts.
 - Pumped hydro storage that uses pipes and terrain height.
 - Flywheels.

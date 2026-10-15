@@ -25,16 +25,24 @@ like belts and trains.
 
 ### Voltage tiers
 
-| Tier | Wire | Use |
-|---|---|---|
-| LV | Vanilla power line | Factory floors, small generators |
-| MV | New | Generator plants, links between factory blocks |
-| HV | New | Long-distance transmission |
-| SC | Superconductor, late game | Zero-loss, high-capacity trunk lines |
+| Tier | Wire | Unlock | Use |
+|---|---|---|---|
+| LV | Vanilla power line | Start | Factory floors, small generators |
+| MV | New | Tier 3 (coal power) | Generator plants, links between factory blocks |
+| HV | New wire and railways | Tier 6 (trains) | Long-distance transmission |
+| SC | Superconductor | Tier 8 or 9 | Zero-loss, high-capacity trunk lines |
 
 Machines connect at LV, as in vanilla. Each tier has a capacity. A large
 generator plant exceeds LV capacity, so its output must leave on a higher tier.
 Capacity values are open; see [Open decisions](#open-decisions).
+
+### Railways
+
+Railways carry power in vanilla. With this mod, a railway is an HV line. Each
+train station has a built-in transformer between the railway and the station's
+LV connector. When the player unlocks trains, the rail network becomes the
+transmission backbone: a station can power an outpost from a central power
+plant, so each outpost does not need its own plant.
 
 ### Tier-islands
 
@@ -85,6 +93,11 @@ player looks at. An overlay colors lines by the load on their island.
 - **Saves.** The mod must define what happens when a player adds it to an
   existing save or removes it.
 - **Multiplayer.** New grid state must replicate to clients.
+- **Satisfactory Plus.** The mod must work inside
+  [Satisfactory Plus](prior-art.md#satisfactory-plus). S+ replaces recipes and
+  generators. Rules must key on wires, poles, railways, and transformers, never
+  on generator or machine classes. Recipes, unlocks, and the cooling supply
+  must be data that an S+ compatibility pack can replace.
 
 ## Decisions
 
@@ -98,7 +111,8 @@ player looks at. An overlay colors lines by the load on their island.
 
 ## Open decisions
 
-1. **Tier capacities and unlock milestones.**
+1. **Tier capacities**, the station transformer rating, and the exact SC
+   milestone.
 2. **Engine hooks.** Whether SML can replace the vanilla fuse and circuit
    logic cleanly. A prototype must answer this before the mechanics are fixed.
 3. **Cooling supply.** Which items or fluids, the rate, and the station
