@@ -9,8 +9,7 @@ earlier one work.
 - Find the hooks for circuit rebuild, power balance, and fuse trip.
 - Prove that the mod can split one vanilla circuit and limit the power flow
   between the parts.
-- Measure solver cost on a large save.
-- Decide the capacity model (see [Open decisions](design.md#open-decisions)).
+- Measure the cost of the tier-island solve on a large save.
 
 ## Phase 1: critical path (MVP)
 

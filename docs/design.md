@@ -36,32 +36,44 @@ Machines connect at LV, as in vanilla. Each tier has a capacity. A large
 generator plant exceeds LV capacity, so its output must leave on a higher tier.
 Capacity values are open; see [Open decisions](#open-decisions).
 
+### Tier-islands
+
+A tier-island is a set of connected lines and buildings on one tier.
+Transformers are the only links between islands. The capacity of an island is
+the capacity of its tier. The mod solves power flow between islands only, not
+along each line.
+
 ### Transformers
 
-A transformer is the only link between two tiers. It has a MW rating, and its
-load is visible on the building. A transformer splits the grid into separate
-tier-islands, so an overload on one island does not spread to another.
+A transformer is the only link between two tier-islands. It has a MW rating,
+and its load is visible on the building. An overload on one island does not
+spread to another.
 
 ### Transmission loss
 
-Loss grows with line length and load, and falls as the tier goes up. Long LV
-runs lose a lot of power; HV lines across the map lose little. Loss is the
-reason to step up for distance. Without loss, a transformer is only a cost.
+Loss on an island grows with its total line length and its load, and falls as
+the tier goes up. Long LV runs lose a lot of power; HV lines across the map
+lose little. Loss is the reason to step up for distance. Without loss, a
+transformer is only a cost.
 
 ### Local overload
 
-An overloaded line or transformer heats up visibly. After a delay, only that
-element trips. Vanilla trips the whole circuit instead.
+An overloaded island or transformer heats up visibly. After a delay, only that
+island or transformer trips. Vanilla trips the whole circuit instead.
 
 ### Superconductors
 
 Late-game wire (Tier 8 or 9) with zero loss and very high capacity. It is the
 reward for building out a full grid.
 
+Superconducting lines need cooling. Cryo stations along the line consume a
+cooling supply (nitrogen or Cooling Systems). A line without cooling acts as a
+normal line with high loss.
+
 ### Diagnostic tool and overlay
 
 A handheld tool shows the tier, load, and loss of the line or building the
-player looks at. An overlay colors lines by load.
+player looks at. An overlay colors lines by the load on their island.
 
 ## Constraints
 
@@ -74,19 +86,20 @@ player looks at. An overlay colors lines by load.
   existing save or removes it.
 - **Multiplayer.** New grid state must replicate to clients.
 
+## Decisions
+
+- **Own mod.** TrueGrid puts rules on machines; this mod puts rules on wires.
+  The core rules differ too much to share one mod. See
+  [Prior art](prior-art.md).
+- **Capacity per tier-island**, not per wire. The solve stays cheap on large
+  factories.
+- **Four tiers:** LV, MV, HV, SC.
+- **Superconductors consume a cooling supply.**
+
 ## Open decisions
 
-1. **Own mod or contribute to TrueGrid.** TrueGrid already does tiers and
-   transformers, with rules on machines. See [Prior art](prior-art.md).
-   Leaning: own mod, because the core rules differ.
-2. **Capacity model.**
-   - Per wire: more spatial and tactile; needs a flow solve on the wire graph.
-   - Per tier-island: each island between transformers is one node, capped by
-     its weakest line; cheap, less tactile.
-3. **Superconductor upkeep.**
-   - A cooling supply that the line consumes (nitrogen or Cooling Systems at
-     each station); without cooling, the line acts as a normal high-loss line.
-   - A build cost only, with no running upkeep.
-4. **Tier capacities and unlock milestones.**
-5. **Engine hooks.** Whether SML can replace the vanilla fuse and circuit
+1. **Tier capacities and unlock milestones.**
+2. **Engine hooks.** Whether SML can replace the vanilla fuse and circuit
    logic cleanly. A prototype must answer this before the mechanics are fixed.
+3. **Cooling supply.** Which items or fluids, the rate, and the station
+   spacing.
