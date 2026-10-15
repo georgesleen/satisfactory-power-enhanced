@@ -1,4 +1,6 @@
-# Satisfactory Power Enhanced
+# Enhanced Power
+
+Mod reference: `EnhancedPower`.
 
 A Satisfactory mod that makes the power grid a layout puzzle: voltage tiers on
 wires, transformers, transmission loss, local overloads, and late-game
