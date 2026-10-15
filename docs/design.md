@@ -20,6 +20,12 @@ like belts and trains.
    overloaded element. A full blackout is rare.
 6. **Visibility is part of the core.** A mechanic without in-game feedback does
    not ship.
+7. **Complexity, not tedium.** A mechanic adds decisions, not actions. It
+   must pass four checks:
+   - The work grows with the number of decisions, not the number of machines.
+   - A solved problem stays solved: build it once, blueprint it, and forget it.
+   - A failure is readable, and one action fixes it.
+   - Optional depth is opt-in: MAM research, presets, or automation.
 
 ## Core mechanics
 
@@ -60,6 +66,13 @@ A transformer is the only link between two tier-islands. It has a MW rating,
 and its load is visible on the building. An overload on one island does not
 spread to another.
 
+Two or more transformers can feed one island and share its load. If one
+trips, the others take its load and can trip in turn. Spare capacity or a
+ring layout prevents the cascade.
+
+A power shard in a transformer raises its rating. Each shard also raises its
+heat and loss.
+
 ### Transmission loss
 
 Loss on an island grows with its total line length and its load, and falls as
@@ -90,6 +103,14 @@ normal line with high loss.
 
 A pioneer on a zipline moves faster on a higher tier. On an SC line, the
 zipline is fast travel.
+
+### Three ways to move power
+
+| Method | Strength | Cost |
+|---|---|---|
+| HV wire | Cheap and flexible | Loss over distance; towers to build |
+| Railway | Free with the train network | Capacity limited by the station transformer |
+| SC line | Zero loss, very high capacity, fast zipline travel | Expensive; needs a cooling supply |
 
 ### Diagnostic tool and overlay
 

@@ -16,6 +16,8 @@ earlier one work.
 - MV and HV wires and poles. The vanilla line is LV.
 - Railways as HV lines, with a built-in transformer in each train station.
 - Transformers with a MW rating.
+- Load sharing between transformers, with cascade trips.
+- Transformer overclocking with power shards.
 - Tier capacities.
 - Transmission loss by length, load, and tier.
 - Local overload: heat warning, then a trip of the overloaded element only.
