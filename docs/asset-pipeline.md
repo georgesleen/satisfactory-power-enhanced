@@ -2,46 +2,57 @@
 
 ## Scope
 
-`assets/transformer/` holds an original transformer visual study.
-`assets/ui/` holds a standalone browser panel with simulated telemetry. Neither
-is integrated with Satisfactory. A render is not a game screenshot, and a working
-browser interaction is not a working gameplay feature.
+`assets/` holds original equipment models and a standalone browser panel.
+None is integrated with Satisfactory. A render is not a game screenshot, and a
+browser interaction is not a gameplay feature.
 
-Use the lightweight art shell independently of the licensed mod toolchain:
+Use the assets shell independently of the licensed mod toolchain:
 
 ```sh
 nix develop path:.#assets
 ```
 
-The shell supplies Blender and its built-in Python API, without the engine,
-MSVC, Wwise, or Wine. Official licensed setup belongs in
+The shell supplies Blender, its built-in Python API, and ffmpeg, without the
+engine, MSVC, Wwise, or Wine. Licensed setup belongs in
 [Development](development.md).
 
-## Regenerate the transformer
+## Models
 
-From the repository root:
+| Model | Guide | Role |
+| --- | --- | --- |
+| EP-24 grid transformer | [assets/transformer](../assets/transformer/README.md) | HV-to-MV transformer concept |
+| EP-C4 capacitor bank | [assets/capacitor-bank](../assets/capacitor-bank/README.md) | MW/MWh fast energy buffer |
+| EP-M6 distribution pole | [assets/mv-pole](../assets/mv-pole/README.md) | Regional MV pole |
+| EP-H16 transmission portal | [assets/hv-tower](../assets/hv-tower/README.md) | HV transmission tower |
+| EP-C8 link cooler | [assets/cryo-station](../assets/cryo-station/README.md) | Superconducting link cooling station |
+
+Each model directory holds a deterministic `generate.py`, the editable `.blend`
+it writes, a `metrics.json` of evaluated bounds, counts, and sockets, and review
+renders. Series identifiers such as `24` or `C4` are names, not ratings. Each
+guide states its exact command, outputs, dimensions, sockets, and limits.
+
+All generators import `assets/common/epkit.py`, the shared kit for primitives,
+materials, labels, state keys, metrics, and the studio rig. Model geometry,
+camera poses, and state timing stay in each `generate.py`.
+
+## Regenerate a model
+
+Run the generator in background Blender from the repository root:
 
 ```sh
-nix develop path:.#assets --command blender --background --factory-startup --threads 6 --python assets/transformer/generate.py -- --animate
+nix develop path:.#assets --command blender --background --factory-startup --threads 3 --python assets/<model>/generate.py -- --animate
 ```
 
-The generator writes `assets/transformer/transformer.blend`,
-`assets/transformer/metrics.json`, and `assets/transformer/renders/hero.png`,
-`service.png`, and `orthographic.png`. It replaces those outputs. Do not use it
-to overwrite unpreserved manual model edits. The default scene uses Cycles CPU,
-40 samples, denoising, and 1280 x 960 review images.
+The generator clears the scene and replaces its named outputs. Do not use it to
+overwrite unpreserved manual model edits. Stills use Cycles CPU with denoising.
 
-The saved scene includes a five-second, 60-frame illustrative sequence with
-moving fan rotors, breaker trip, and keyed cabinet indicators. This is Blender
-animation, not game physics or a verified Unreal animation implementation.
-
-See the [model source guide](../assets/transformer/README.md) for selected-view
-rendering, animation-frame generation, FFmpeg encoding of
-`renders/transformer-operating.mp4` and `renders/animation-states.png`, provenance,
-and exact limitations. These requested previews are presentation derivatives,
-not engine binaries. Intermediate animation frames are disposable after encoding.
-Successful generation and visual inspection must still be reported as observed
-results, not inferred from the script.
+`--animate` keys a short non-looping state sequence in the saved scene, such as
+an operating, warning, trip, and isolated sequence. `--render-animation` also
+writes low-sample frames to `renders/animation/`. Each guide then encodes them
+with ffmpeg into a silent MP4 and a four-state contact sheet. The frames are
+disposable and ignored by Git. The MP4 and contact sheet are presentation
+previews: Blender object actions, visibility keys, and material emission, not
+game physics, simulation output, or an Unreal animation.
 
 ## Preview the browser panel
 
@@ -77,15 +88,11 @@ and render staging distinguishable from the meshes intended for eventual export.
 Name attachments by voltage tier and document their side and position. A marker
 does not prove a functioning Unreal socket or electrical connection.
 
-The EP-24 study uses a nominal 4 m square footprint. Its `EP24_Transformer`
-collection contains the asset; `Studio_non_export` holds presentation geometry,
-including a separate 4.6 m display foundation, plus cameras and lights.
-`CableSocket_HV` and `CableSocket_MV` are empty markers at opposite X-side
-terminal eyes. This is an HV-to-MV visual concept, not an HV-to-LV model or a
-committed gameplay rating. `metrics.json` records evaluated bounds, counts, and
-socket positions when generated.
+Each guide documents its collections and socket markers. Socket markers are
+named by tier, such as `CableSocket_HV` or `CableSocket_LV`. `metrics.json`
+records evaluated bounds, counts, and socket positions when generated.
 
-The scene has editable procedural materials and unapplied detail modifiers.
+Each scene has editable procedural materials and unapplied detail modifiers.
 There is no deliberate game UV layout, texture bake, export, collision mesh, LOD
 chain, or verified Unreal import. These are planned delivery steps, not hidden
 capabilities of the `.blend`.
@@ -109,8 +116,9 @@ observed evidence:
 - **LODs:** author and inspect distance representations and performance before
   claiming runtime suitability. A detailed offline render is not an LOD budget.
 - **Game integration:** register the actual mesh, materials, sockets, buildable,
-  and interaction behavior in the real mod target. Transformer energy accounting
-  remains blocked on the contracts in [Development](development.md).
+  and interaction behavior in the real mod target. The core energy accounting is
+  implemented and host-tested; its coupling to the game's power solver is
+  unverified. See [Development](development.md#open-engine-questions).
 
 The browser panel is an interface study, not a UMG widget or game client. Sample
 ratings, losses, overload timing, and traces are illustrative. Optional power
@@ -121,10 +129,11 @@ all harmonic distortion.
 
 ## Source, previews, and generated output
 
-Track original editable art, generator scripts, and browser source. The requested
-PNG review previews are intentional derived presentation deliverables; retain
+Track original editable art, generator scripts, and browser source. PNG stills,
+MP4 previews, and contact sheets are derived presentation deliverables; retain
 their source and reproduction command alongside them. They are not Unreal cooked
-assets or evidence that the design works in game.
+assets or evidence that the design works in game. Animation frames under
+`renders/animation/` are not tracked.
 
 Keep engine-generated `Binaries`, `Intermediate`, `Saved`, `DerivedDataCache`,
 cooked packages, transient export trials, Blender backups, and licensed vendor

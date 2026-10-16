@@ -7,3 +7,5 @@
 /DerivedDataCache/
 /compile_commands.json
 /assets/*/renders/animation/
+/build/
+__pycache__/

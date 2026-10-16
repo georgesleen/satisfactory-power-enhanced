@@ -19,10 +19,22 @@ let
   };
   installationEnvironment = pkgs.buildFHSEnv {
     name = "msvc-install-env";
-    targetPkgs = p: with p; [
-      bash coreutils findutils gawk gnugrep gnused git python3 perl
-      msitools unzip wineWow64Packages.stable samba
-    ];
+    targetPkgs =
+      p: with p; [
+        bash
+        coreutils
+        findutils
+        gawk
+        gnugrep
+        gnused
+        git
+        python3
+        perl
+        msitools
+        unzip
+        wineWow64Packages.stable
+        samba
+      ];
     runScript = "bash";
   };
 in
@@ -30,7 +42,10 @@ pkgs.stdenvNoCC.mkDerivation {
   pname = "msvc-wine";
   version = "17.8.23";
   src = source;
-  nativeBuildInputs = [ pkgs.gnutar pkgs.gzip ];
+  nativeBuildInputs = [
+    pkgs.gnutar
+    pkgs.gzip
+  ];
   dontUnpack = true;
   dontConfigure = true;
   dontBuild = true;

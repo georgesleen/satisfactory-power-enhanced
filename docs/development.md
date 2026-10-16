@@ -1,114 +1,138 @@
 # Development
 
-## Transformer experiment: implementation blocked
+## Source layout
 
-There is no transformer actor, plugin module, spawn command, or buildable target
-in this repository. Runtime verification is pending. A producer driven by the
-previous frame's `HasPower()` cannot satisfy the required no-energy-creation
-contract, so the experiment is not represented by a nonconserving prototype.
-No editor or binary asset is required to investigate the C++ API.
+| Path | Contents | Verification |
+| --- | --- | --- |
+| `Source/EnhancedPowerCore/` | Engine-free simulation core from [Core model](core-model.md) | Host builds and tests |
+| `Tests/Core/` | doctest host tests for the core | `make test`, `make check` |
+| `tools/balance/` | `ep-balance` CLI, scenarios, tuning, and report gates; see [Balance](balance.md) | `make balance`, `make test` |
+| `EnhancedPower.uplugin`, `Source/EnhancedPower/` | SML plugin with a server-only transformer probe | Not compiled |
+| `assets/` | Blender models and the browser UI study; see [Asset pipeline](asset-pipeline.md) | Assets shell |
 
-## Available source evidence
+The core is plain C++20 with no Unreal headers. Its Unreal module entry point,
+`EnhancedPowerCoreModule.cpp`, is excluded from the host build. The runtime
+module calls the core. No playable building, wire tier, or grid rule exists in
+the game yet.
 
-The official SML starter project inspected is
-[`satisfactorymodding/SatisfactoryModLoader` at `8eebc9e6`](https://github.com/satisfactorymodding/SatisfactoryModLoader/tree/8eebc9e6).
-Paths below are relative to that project, not this repository.
+## Shells
 
-- `Mods/Alpakit/Templates/CPPAndBlueprintBlank/Source/PLUGIN_NAME/` is the
-  upstream C++ plugin template, using C++20 and the FactoryGame/SML modules.
-- `Source/FactoryGame/Public/FGPowerConnectionComponent.h` exposes
-  `SetPowerInfo()`. Each connection must have its own info; sharing one can
-  race when assigning its circuit ID.
-- `Source/FactoryGame/Public/FGCircuitConnectionComponent.h` exposes
-  `AddHiddenConnection()` and `RemoveHiddenConnection()`, which connect and
-  disconnect both ends and their circuits. One endpoint must be hidden.
-  There must be no such connection between transformer primary and secondary.
-- `Source/FactoryGame/Public/FGCircuitSubsystem.h` exposes connection/removal
-  APIs and circuit/group rebuild delegates. Circuit pointers can be invalidated
-  by a connection change and must not be cached across rebuilds.
-- `Source/FactoryGame/Public/FGPowerInfoComponent.h` exposes asynchronous
-  consumption and production requests, actual consumption, regulated production,
-  and the protected virtual `UpdateSimulationData()` callback. It explicitly
-  permits dynamic demand factors above one. Maximum target consumption is
-  informational, not a power reservation.
-- `Source/FactoryGame/Public/FGPowerCircuit.h` states that circuit groups exist
-  only on the server. The group balance and battery tick are private. It does
-  not specify the ordering of separate group solves or a cross-group transfer
-  transaction.
-- Power infos implement `IFGSaveInterface`; target consumption and dynamic
-  capacity have `SaveGame` metadata. That does not establish how an independently
-  spawned actor and its connections should be restored safely before the next
-  solve. No saved nonzero offer may be trusted as evidence of primary supply.
+| Shell | Command | Purpose |
+| --- | --- | --- |
+| Default | `nix develop` | Core code, tests, formatting, balance |
+| Assets | `nix develop path:.#assets` | Blender and ffmpeg |
+| Bootstrap | `nix develop path:.#bootstrap` | Authorized vendor and server acquisition |
+| Mod | `nix develop path:.#mod` | Licensed engine, MSVC, and Wwise |
 
-The corresponding `Private/FGPowerInfoComponent.cpp` and
-`Private/FGPowerCircuit.cpp` identify themselves as automatically generated
-header implementations and contain empty methods/default returns. They are not
-the shipped game's solver. The CSS Unreal Engine distribution supplies engine
-source, not the missing FactoryGame power implementation.
+The default shell provides GCC, CMake, Ninja, doctest, nlohmann_json,
+clang-tools, Python, nixfmt, and shellcheck. It needs no licensed vendor payload
+or `nix/wwise-source.json`. The assets shell needs no vendor payload either.
+Enter the default shell with `nix develop` or `direnv allow`.
 
-## Exact missing contract
+Use `path:.` while adding files that are not tracked by Git.
+Git-backed flake references omit untracked files.
 
-Implementation requires the real bodies, or an authoritative equivalent
-contract, for:
+## Host development
 
-1. `AFGCircuitSubsystem::Tick()`, `UFGPowerCircuitGroup::PreTickCircuitGroup()`
-   and `TickPowerCircuitGroup()`: when requests are sampled, how separate groups
-   are ordered, and when output is committed relative to primary consumption.
-2. `UFGPowerInfoComponent::UpdateSimulationData()` and
-   `GetRegulatedDynamicProduction()`: whether the reported production is the
-   delivered amount or requested amount during overload, whether it is clamped
-   to capacity, and whether a callback can change another group's still-pending
-   solve without changing an already-committed result.
-3. Fuse, disconnect, and battery behavior during that transaction: output must
-   not be committed if the corresponding primary debit is rejected. A stale
-   `HasPower()` flag is insufficient.
-4. Zero-demand startup: `HasPower()` on the info describes fulfillment of its
-   request, whereas the connection's `HasPower()` describes circuit production.
-   Neither header specifies a funded bootstrap transaction. An arbitrary probe
-   load would change idle consumption, and a free initial offer would create
-   energy. Startup must be established without either shortcut.
+```sh
+nix develop
+make test
+make balance
+make fmt
+make fmt-check
+make check
+```
 
-Tick prerequisites alone cannot resolve independent circuit-group accounting.
-Reading secondary output and requesting the matching primary consumption next
-frame does not prove conservation: the later request can fail. A stored-energy
-model would need explicit accounting and would change the immediate-unpowered
-output requirement; it is not silently substituted for a transformer.
+`make test` configures the root CMake project, builds with at most four jobs,
+and runs CTest: the core tests, the balance scenarios, and the balance report
+and extraction tests. CMake writes the compile command database in `build`.
+`make balance` builds `ep-balance` and prints the report for
+`tools/balance/scenarios`.
 
-## Runtime acceptance checks
+`make check` runs `nix flake check -L`. It checks formatting and shell lint,
+builds the core and balance tool with GCC and Clang, and runs CTest for each
+compiler. It never realizes licensed vendor payloads or the dedicated server.
+CI runs the same command on pushes and pull requests. `.envrc` installs the
+tracked `hooks/pre-push` automatically, and the hook runs this gate.
 
-These are requirements, not observed results. There are no truthful
-`EnhancedPower` spawn/wire/use commands or build command until the contract above
-is resolved and an actual target exists. Do not use an invented `summon` class
-name. The eventual command must be registered through upstream engine/SML
-facilities and operate on the authority, without an editor-created asset.
+`make fmt` formats C++ and Nix source. `make fmt-check` checks C++ under
+`Source`, `Tests`, and `tools`, checks Nix formatting, and runs shellcheck on
+`nix/*.sh` and `hooks/*`. `.clang-format` uses tab indentation, Allman braces,
+and a 110-column limit.
 
-Use a disposable save with one source island and one load island:
+## Transformer probe
 
-- Verify two distinct connection/info pairs, circuit IDs, and group IDs; neither
-  hidden connections nor active circuit bridges may join the two islands.
-- Start with an unloaded secondary and a powered primary, then add secondary
-  load. Startup must succeed without free output or a permanent probe load.
-- For a declared rating R MW, serve loads below R, exactly R, and above R.
-  Delivered secondary power must never exceed R; above-R demand must trigger
-  vanilla secondary overload behavior, not increase the offer.
-- Measure primary actual consumption and secondary actual delivered production
-  per solver interval, not just graph averages. For lossless operation their
-  energies must match; an idle secondary must not impose the rating as primary
-  consumption.
-- Remove primary generation, disconnect the input, and trip the primary fuse
-  while the secondary is loaded. There must be no unfunded secondary delivery.
-- Trip the secondary while keeping the primary island below its capacity. The
-  primary fuse must remain intact. Test both actor creation orders and variable
-  frame times to expose order-dependent behavior.
-- Supply the secondary locally and leave the primary dead. No reverse transfer
-  or self-starting energy loop is allowed.
-- Repeat on a host and client; only the server may update power requests.
-  If persistence is supported, repeat across save/load with a dead primary.
+The `EnhancedPower` runtime module is a transient server diagnostic, not a
+playable transformer. It spawns a source actor, a load actor, and a transformer
+actor in C++, with no assets, recipes, or save support. The transformer joins
+two separate circuits through the core `PlanLink`, `SettleLink`, and
+`StepThermal` functions. The probe source is complete, but it is not compiled or
+run. The Unreal build waits on Wwise provisioning; see
+[Toolchain setup](#toolchain-setup).
 
-Builds, tests, packaging, and in-game checks have not been run for this experiment.
-Vanilla railway regeneration must be preserved, not implemented a second time:
-`FGLocomotive::SetPowerRegeneration()` and the locomotive movement component's
-regenerative power factor/curve already expose it.
+The plugin targets the starter headers at SML commit `8eebc9e6` (game CL
+`513885`) and declares SML `>=3.12.0 <3.13.0`. `RequiredOnRemote` is false, so
+clients do not need the plugin. The pinned dedicated server with published SML
+`3.12.0` reports CL `513885`, which matches the starter headers.
+
+Run these commands through the server console or the HTTPS API `RunCommand`,
+in a disposable world with auto-pause disabled. Editor and client worlds reject
+them. The probe actors are transient; never use a normal player save.
+
+| Command | Arguments | Effect |
+| --- | --- | --- |
+| `EnhancedPower.Probe.Start` | `[ratingMW]`, default `50` | Creates one unloaded fixture. Source production is twice the rating. |
+| `EnhancedPower.Probe.Set` | `sourceMW loadMW peakMW periodSeconds` | Sets production and demand. A nonzero period alternates `loadMW` and `peakMW` each half period. |
+| `EnhancedPower.Probe.Report` | None | Writes cumulative energy accounting to `LogEnhancedPower`. |
+| `EnhancedPower.Probe.Stop` | None | Reports, removes hidden connections, and destroys the fixture. |
+
+SML hooks run before and after `AFGCircuitSubsystem::Tick(float)`. The before
+hook applies the core plan as primary consumption and secondary dynamic
+capacity. The after hook reads actual consumption and regulated production and
+settles the core accounting. Each tick logs a `LogEnhancedPower: Probe tick=...`
+line with the plan, the engine readbacks, fuse flags, heat, escrow, settlement
+excess, and power-info callback counts. `conserved=1` in the report means the
+accounting residual is within `1e-6` MJ and both excess counters are zero. It
+does not prove that the callbacks fall inside the hook bracket.
+
+## Open engine questions
+
+Host tests establish the core accounting: a link never offers unfunded energy,
+and settlement reports any engine excess explicitly. The coupling to the
+game's power solver is unverified. The starter project's
+`FGPowerCircuit.cpp` and `FGPowerInfoComponent.cpp` are generated stubs, so the
+headers alone cannot answer these questions. The probe answers them on a real
+server:
+
+| Question | Probe evidence |
+| --- | --- |
+| Do the two circuits stay separate? | Distinct circuit and group IDs; no hidden connection joins primary and secondary. |
+| Does the engine honor the secondary capacity? | `delivered <= planOffer` and `overDelivery=0` on every tick, including overload. |
+| Does primary consumption follow demand, or lag one tick? | `preSolveRequest`, `planRequest`, `request`, and `consumed` under a pulsed load. |
+| Is a secondary trip local? | Secondary fuse trips while the primary fuse holds. |
+| Do upstream outages and fuses propagate? | Input stops, escrow drains, and the offer reaches zero. |
+| Do callbacks fall inside the tick bracket? | One callback per info per tick and no callbacks outside the bracket. |
+
+The upstream sources are relative to
+[`satisfactorymodding/SatisfactoryModLoader` at `8eebc9e6`](https://github.com/satisfactorymodding/SatisfactoryModLoader/tree/8eebc9e6):
+
+- `Source/FactoryGame/Public/FGPowerConnectionComponent.h`: `SetPowerInfo()`;
+  each connection needs its own info.
+- `Source/FactoryGame/Public/FGCircuitConnectionComponent.h`:
+  `AddHiddenConnection()` and `RemoveHiddenConnection()`. No such connection may
+  join transformer primary and secondary.
+- `Source/FactoryGame/Public/FGCircuitSubsystem.h`: the virtual subsystem
+  `Tick(float)` and rebuild delegates. Circuit pointers do not survive a rebuild.
+- `Source/FactoryGame/Public/FGPowerInfoComponent.h`: asynchronous requests,
+  actual consumption, regulated production, and the protected virtual
+  `UpdateSimulationData()` callback. Demand factors above one are permitted.
+- `Source/FactoryGame/Public/FGPowerCircuit.h`: circuit groups exist only on the
+  server. The header does not specify group solve order.
+
+Persistence, multiplayer clients, and railway regeneration are outside the
+probe. Vanilla railway regeneration stays vanilla:
+`AFGLocomotive::SetPowerRegeneration()` and the locomotive movement component's
+regenerative factor already expose it.
 
 ## Toolchain setup
 
@@ -138,12 +162,20 @@ make smoke
 ```
 
 The bootstrap shell does not require vendor payloads and is available as
-`nix develop path:.#bootstrap`. The default devshell requires all licensed
-sources. Missing Wwise input produces an actionable error until an
-Audiokinetic account is used locally with `make bootstrap-wwise`. This command
-prompts without echoing the password and does not persist it. Review applicable
-vendor terms before downloading; bootstrap is not permission to accept
-unrelated licenses.
+`nix develop path:.#bootstrap`. The vendor shell is `nix develop path:.#mod`.
+It prints an actionable message and leaves `WWISE_ROOT` unset when
+`nix/wwise-source.json` is missing. The `wwise` package is exposed only after
+this lock exists. Core checks and the default and assets shells do not import
+the Wwise SDK. `make toolchain` realizes engine and MSVC, plus Wwise when locked.
+Use `make bootstrap-wwise` with an Audiokinetic account, then `make import-wwise`.
+Bootstrap prompts without echoing the password and does not persist it.
+Review applicable vendor terms before downloading. Bootstrap is not permission
+to accept unrelated licenses.
+
+The Unreal build of the starter project needs the integrated Wwise plugin, so
+`make mod-build` waits on an Audiokinetic account and the Wwise lock. Host
+development, assets, the server bootstrap, and the server smoke do not need
+Wwise.
 
 The MSVC bootstrap uses the Microsoft license acceptance explicitly approved
 for this setup. It does not authorize acceptance of unrelated licenses.
@@ -163,11 +195,15 @@ The official starter checkout lives at
 `Mods/EnhancedPower` linked to this repository. It remains writable for
 upstream project files and generated build output. `make editor`,
 `make project-files`, and `make compile-db` wrap upstream Unreal commands;
-they are not replacement build systems. No transformer target exists yet.
+they are not replacement build systems. The linked plugin builds with
+`FactoryEditor`.
 
-`nix run path:.` or `make shell` enters the FHS runtime. The outer direnv
-devshell supplies its launcher and command tools; Unreal and Wine commands
-run inside FHS. Runtime home, config, cache, temporary files, and Wine prefix
+`nix run path:.` or `make shell` enters the FHS runtime. The mod shell supplies
+its launcher and vendor paths. Unreal and Wine commands run inside FHS.
+`make core-msvc` compiles every core source with the packaged MSVC under Wine.
+It uses C++20, `/W4 /WX`, conformance mode, and the Unreal exception-disabled
+configuration. It creates object files under `build/msvc`; it does not link or
+run the host tests. Runtime home, config, cache, temporary files, and Wine prefix
 are isolated beneath `SF_ROOT`, which defaults to the `sf` directory above.
 The immutable engine keeps its installed-build marker and precompiled
 automation. Its bundled dotnet permissions are fixed during packaging rather
@@ -180,6 +216,48 @@ Wwise integration copies writable plugin source/config into the starter
 checkout because upstream WwisePatches modifies those files. Large `ThirdParty`
 SDK data is linked to the immutable output. The integration command refuses
 to overwrite an existing plugin directory.
+
+## Mod packaging
+
+After vendor import and Wwise integration:
+
+```sh
+make mod-build
+make mod-deploy
+```
+
+`make mod-build` builds the upstream `FactoryEditor` target with the linked
+plugin. `make mod-package` calls upstream `PackagePlugin` for the Windows client
+and Linux dedicated server. `make mod-deploy` packages only the Linux server
+plugin and copies it into `$SF_ROOT/server-instance`, the instance that
+`packages.server-run` starts. It is a development deployment, not a release.
+All three commands limit Unreal Build Tool to four actions and require the
+licensed toolchain. A passing host check implies no build, package, or
+deployment result.
+
+## Dedicated server
+
+The server bootstrap uses anonymous SteamCMD for app `1690800`:
+
+```sh
+make bootstrap-server
+make server-smoke
+```
+
+Bootstrap records `nix/server-source.json` and imports its archive through
+`requireFile`. The server package does not redistribute the Steam payload.
+`packages.server` exposes the pinned server. `packages.sml-server` exposes the
+published LinuxServer SML build. `packages.server-run` starts a disposable local
+instance under `$SF_ROOT/server-instance` with SML and loopback-only networking.
+`make server-smoke` starts that instance, disables auto-pause, creates a world
+through the HTTPS API, checks that game time advances, saves through
+`RunCommand`, checks the SML version in the log, and shuts the server down. It
+does not need the EnhancedPower plugin. The server packages do not participate
+in the core check gate.
+
+The server is the runtime path for the probe: deploy the plugin with
+`make mod-deploy`, start `packages.server-run`, and run the probe commands
+through the console or `RunCommand`.
 
 ## Storage and reclamation
 

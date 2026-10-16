@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Local gate: formatting, core builds with GCC and Clang, and host tests; CI runs the same command.
+set -euo pipefail
+
+echo "[pre-push] nix flake check..."
+make check
+
+echo "[pre-push] all checks passed."

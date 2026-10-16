@@ -3,8 +3,9 @@
 Each phase must be fun on its own. A later phase must not be needed to make an
 earlier one work.
 
-All phases describe planned gameplay, not implemented game features. Runtime
-transformers remain gated on proven update ordering and energy conservation.
+All phases describe planned gameplay, not implemented game features. The core
+energy accounting is host-tested. Runtime transformers remain gated on the
+engine questions in [Development](development.md#open-engine-questions).
 
 Design interesting challenges and competing solutions together. Each phenomenon
 must have a recognizable consequence, legible diagnostics, and at least two
@@ -20,8 +21,10 @@ retroactively invalidate a healthy LV factory.
 - Prove that the mod can split one vanilla circuit and limit the power flow
   between the parts.
 - Measure the cost of the tier-island solve on a large save.
-- Verify transformer transfer order, conservation, and bidirectional railway
-  power, preserving vanilla regeneration without creating or double-counting it.
+- Run the transformer probe on a dedicated server to verify transfer order and
+  conservation in the engine.
+- Verify bidirectional railway power, preserving vanilla regeneration without
+  creating or double-counting it.
 
 ## Phase 1: core grid
 

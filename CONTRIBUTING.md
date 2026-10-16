@@ -1,8 +1,8 @@
 # Contributing
 
-Enhanced Power is a design and asset project, not a playable mod. The transformer
-runtime is blocked on verified solver ordering and energy conservation. Blender
-previews and the browser panel are prototypes, not evidence of in-game behavior.
+EnhancedPower has a host-testable simulation core and a mod integration project.
+Blender previews and the browser panel are prototypes. They do not establish
+in-game behavior.
 
 ## Start here
 
@@ -10,6 +10,31 @@ previews and the browser panel are prototypes, not evidence of in-game behavior.
 git clone https://github.com/georgesleen/satisfactory-power-enhanced.git
 cd satisfactory-power-enhanced
 ```
+
+Enter the light default shell and run the host tests:
+
+```sh
+nix develop
+make test
+make balance
+```
+
+The default shell needs no licensed vendor downloads or Wwise lock.
+With direnv, run `direnv allow` instead of `nix develop`.
+`.envrc` installs the tracked pre-push hook automatically.
+
+Before submitting code, run:
+
+```sh
+make fmt
+make check
+```
+
+The hook and CI run the same gate: C++ and Nix formatting, shell lint, GCC and
+Clang builds, and the core and balance tests. `make fmt-check` runs only the
+formatting and lint checks. Format C++ with the tracked `.clang-format`. Use tab
+indentation, Allman braces, and a 110-column limit. Generated build output
+belongs in `build`.
 
 For art, enter the separate assets shell:
 
@@ -20,23 +45,29 @@ nix develop path:.#assets
 It supplies Blender without the licensed engine, MSVC, Wwise, or Wine. See the
 [asset pipeline](docs/asset-pipeline.md) for source and preview commands.
 
-For runtime work, follow [Development](docs/development.md) for official licensed
-vendor acquisition, the mod shell, source evidence, and runtime acceptance checks.
-The default shell is not the assets shell. Do not redistribute vendor downloads,
-credentials, or proprietary engine content.
+For runtime work, enter `nix develop path:.#mod`.
+Follow [Development](docs/development.md) for official licensed vendor acquisition,
+the FHS runtime, and acceptance checks. `make core-msvc` checks core portability
+with packaged MSVC under Wine. Do not redistribute vendor downloads, credentials,
+or proprietary engine content.
 
 ## Where work belongs
 
 - `docs/design.md`: mechanics, decisions, and open design questions.
+- `docs/core-model.md`: exact core rules; `Tests/Core` tests them.
+- `docs/balance.md`: initial tuning and `ep-balance` results.
 - `docs/roadmap.md`: implementation sequence.
-- `docs/development.md`: toolchain setup and unresolved runtime contracts.
-- `assets/transformer/`: authored Blender model, generator, and review renders.
+- `docs/development.md`: shells, the transformer probe, toolchain, and server.
+- `Source/EnhancedPowerCore/`: engine-free simulation core.
+- `Source/EnhancedPower/`: Unreal runtime module; it calls the core.
+- `tools/balance/`: balance CLI, scenarios, tuning, and report gates.
+- `assets/<model>/`: Blender generator, editable scene, and review renders;
+  `assets/common/epkit.py` is the shared kit.
 - `assets/ui/`: standalone browser interface prototype with simulated data.
 - `nix/`, `flake.nix`, and `Makefile`: toolchain definitions and commands.
 
-There is no EnhancedPower gameplay module or buildable transformer target. Paths
-in the development document that refer to the official starter are upstream
-sources, not implementations in this repository.
+Paths in the development document that refer to the official starter are
+upstream sources, not implementations in this repository.
 
 ## Submit a focused change
 

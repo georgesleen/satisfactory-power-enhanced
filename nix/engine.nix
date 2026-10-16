@@ -7,21 +7,27 @@ let
     "b624c15b9becf336b6ed4e71b73498f208d3f6edaf857e0bcdcebce7540a9362"
     "565829545aff54f3771ac80d00e6edea38fd0a235c723c55be063f563aadb049"
   ];
-  parts = pkgs.lib.imap0 (index: hash: pkgs.requireFile {
-    name = "UnrealEngine-CSS-Editor-Linux.tar.zst.0${toString index}";
-    sha256 = hash;
-    message = ''
-      CSS Unreal Engine ${version} requires authorized GitHub access.
-      Run make bootstrap-engine from this checkout to download, verify and import
-      the four licensed release parts. No credentials are passed to Nix builds.
-    '';
-  }) hashes;
+  parts = pkgs.lib.imap0 (
+    index: hash:
+    pkgs.requireFile {
+      name = "UnrealEngine-CSS-Editor-Linux.tar.zst.0${toString index}";
+      sha256 = hash;
+      message = ''
+        CSS Unreal Engine ${version} requires authorized GitHub access.
+        Run make bootstrap-engine from this checkout to download, verify and import
+        the four licensed release parts. No credentials are passed to Nix builds.
+      '';
+    }
+  ) hashes;
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "unreal-engine-css";
   inherit version;
   dontUnpack = true;
-  nativeBuildInputs = [ pkgs.zstd pkgs.gnutar ];
+  nativeBuildInputs = [
+    pkgs.zstd
+    pkgs.gnutar
+  ];
   installPhase = ''
     set -o pipefail
     mkdir -p "$out"
