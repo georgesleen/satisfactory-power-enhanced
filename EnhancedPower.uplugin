@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"SemVersion": "0.1.0",
+	"GameVersion": ">=513885",
+	"FriendlyName": "Enhanced Power",
+	"Description": "Voltage islands and conservative power transfer diagnostics.",
+	"Category": "Modding",
+	"CreatedBy": "George Sleen",
+	"CanContainContent": true,
+	"IsExperimentalVersion": true,
+	"Installed": false,
+	"RequiredOnRemote": false,
+	"Modules": [
+		{ "Name": "EnhancedPowerCore", "Type": "Runtime", "LoadingPhase": "Default" },
+		{ "Name": "EnhancedPower", "Type": "Runtime", "LoadingPhase": "Default" }
+	],
+	"Plugins": [
+		{ "Name": "SML", "Enabled": true, "SemVersion": ">=3.12.0 <3.13.0" }
+	]
+}
