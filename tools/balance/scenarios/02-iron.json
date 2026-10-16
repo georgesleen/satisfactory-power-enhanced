@@ -1,0 +1,87 @@
+{
+  "name": "Tier 2 iron starter and reinforced plates",
+  "milestoneTier": 2,
+  "entry": [
+    0,
+    0,
+    0
+  ],
+  "assumptions": [
+    "Illustrative community-style modular factory, not a measured save or a recipe-complete production planner.",
+    "Counts represent a full production building mix including upstream processing. Logistics outside the stated boundary do not draw power here.",
+    "Machines run at full duty. No Somersloop boost. All unmarked clocks are 100 percent.",
+    "Coordinates and spacing in meters define a rectangular block graph. Pole branches use four machines per pole. Feed enters at the origin.",
+    "Normal crafting cycles share the mean draw. The peak column conservatively synchronizes every variable-power machine.",
+    "Scale target: one modular reinforced plate and rotor starter, with 150 percent miners. Standard iron recipes. Approximate floor boundary 120 by 220 meters."
+  ],
+  "blocks": [
+    {
+      "label": "Iron miners",
+      "building": "Build_MinerMk1_C",
+      "count": 2,
+      "columns": 8,
+      "clock": 1.5,
+      "origin": [
+        20,
+        0
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Iron ingots",
+      "building": "Build_SmelterMk1_C",
+      "count": 16,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        40
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Plates rods screws",
+      "building": "Build_ConstructorMk1_C",
+      "count": 24,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        100
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Reinforced plates and rotors",
+      "building": "Build_AssemblerMk1_C",
+      "count": 6,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        180
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    }
+  ]
+}

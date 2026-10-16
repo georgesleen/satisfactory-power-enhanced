@@ -1,0 +1,70 @@
+{
+  "name": "Central nuclear plant supplies four separated campuses",
+  "milestoneTier": 9,
+  "entry": [
+    0,
+    0,
+    0
+  ],
+  "assumptions": [
+    "Twelve uranium generators at 100 percent produce 30 GW. Fuel production and water pumps are outside this collection-island boundary.",
+    "Each generator row is a separate local LV collection island in the stepped layout. The comparison treats the export node as the feed of an aggregate transmission island.",
+    "Exported factory demand is lumped at each station transformer. Factory internal losses and transformer conversion losses are excluded.",
+    "Four campuses are copies of the Tier 7, Tier 8, Tier 9, and extreme-pulse scenarios. Their simultaneous worst-case peaks size the backbone.",
+    "Coordinates in meters set straight transmission spans. Railway HV and wire HV use the same tier parameters; no train traction or regeneration is modeled."
+  ],
+  "blocks": [
+    {
+      "label": "Nuclear generators",
+      "building": "Build_GeneratorNuclear_C",
+      "count": 12,
+      "columns": 4,
+      "clock": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "spacing": [
+        60,
+        60
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    }
+  ],
+  "kind": "plant",
+  "factories": [
+    {
+      "scenario": "07-aluminum.json",
+      "offset": [
+        1500,
+        0,
+        0
+      ]
+    },
+    {
+      "scenario": "08-pasta.json",
+      "offset": [
+        0,
+        2500,
+        0
+      ]
+    },
+    {
+      "scenario": "09-quantum.json",
+      "offset": [
+        -3000,
+        0,
+        0
+      ]
+    },
+    {
+      "scenario": "11-pulsed-district.json",
+      "offset": [
+        0,
+        -3500,
+        0
+      ]
+    }
+  ]
+}

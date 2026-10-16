@@ -1,0 +1,644 @@
+{
+  "source": "Official Satisfactory Wiki, stable records: https://satisfactory.wiki.gg/wiki/Template:DocsBuildings.json?oldid=62020 and https://satisfactory.wiki.gg/wiki/Template:DocsRecipes.json?oldid=62858 . Clock exponent: https://satisfactory.wiki.gg/wiki/Clock_speed ; boost exponent: https://satisfactory.wiki.gg/wiki/Production_amplification .",
+  "buildings": {
+    "Build_AssemblerMk1_C": {
+      "name": "Assembler",
+      "powerMegawatts": 15,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_Blender_C": {
+      "name": "Blender",
+      "powerMegawatts": 75,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_CeilingLight_C": {
+      "name": "Ceiling Light",
+      "powerMegawatts": 2,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_ConstructorMk1_C": {
+      "name": "Constructor",
+      "powerMegawatts": 4,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_Converter_C": {
+      "name": "Converter",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_CyberWagon_C": {
+      "name": "Cyber Wagon",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 150,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_DroneStation_C": {
+      "name": "Drone Port",
+      "powerMegawatts": 100,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_Elevator_C": {
+      "name": "Personnel Elevator",
+      "powerMegawatts": 20,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_Explorer_C": {
+      "name": "Explorer",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 90,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_FloodlightPole_C": {
+      "name": "Flood Light Tower",
+      "powerMegawatts": 6,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_FloodlightWall_C": {
+      "name": "Wall-Mounted Flood Light",
+      "powerMegawatts": 6,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_FluidTruckStation_C": {
+      "name": "Fluid Truck Station",
+      "powerMegawatts": 20,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_FluidTruck_C": {
+      "name": "Fluid Truck",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 75,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_FoundryMk1_C": {
+      "name": "Foundry",
+      "powerMegawatts": 16,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_FrackingSmasher_C": {
+      "name": "Resource Well Pressurizer",
+      "powerMegawatts": 150,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_GeneratorBiomass_Automated_C": {
+      "name": "Biomass Burner",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 30,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_GeneratorCoal_C": {
+      "name": "Coal-Powered Generator",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 75,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_GeneratorFuel_C": {
+      "name": "Fuel-Powered Generator",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 250,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_GeneratorNuclear_C": {
+      "name": "Nuclear Power Plant",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 2500,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_HadronCollider_C": {
+      "name": "Particle Accelerator",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_JumpPadAdjustable_C": {
+      "name": "Jump Pad",
+      "powerMegawatts": 5,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_LandingPad_C": {
+      "name": "U-Jelly Landing Pad",
+      "powerMegawatts": 5,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_ManufacturerMk1_C": {
+      "name": "Manufacturer",
+      "powerMegawatts": 55,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_MinerMk1_C": {
+      "name": "Miner Mk.1",
+      "powerMegawatts": 5,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_MinerMk2_C": {
+      "name": "Miner Mk.2",
+      "powerMegawatts": 15,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_MinerMk3_C": {
+      "name": "Miner Mk.3",
+      "powerMegawatts": 45,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_OilPump_C": {
+      "name": "Oil Extractor",
+      "powerMegawatts": 40,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_OilRefinery_C": {
+      "name": "Refinery",
+      "powerMegawatts": 30,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_Packager_C": {
+      "name": "Packager",
+      "powerMegawatts": 10,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_PipeHyperStart_C": {
+      "name": "Hypertube Entrance",
+      "powerMegawatts": 10,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_PipelinePumpMk2_C": {
+      "name": "Pipeline Pump Mk.2",
+      "powerMegawatts": 8,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_PipelinePump_C": {
+      "name": "Pipeline Pump Mk.1",
+      "powerMegawatts": 4,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_PortalSatellite_C": {
+      "name": "Satellite Portal",
+      "powerMegawatts": 250,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_Portal_C": {
+      "name": "Main Portal",
+      "powerMegawatts": 250,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_QuantumEncoder_C": {
+      "name": "Quantum Encoder",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_RadarTower_C": {
+      "name": "Radar Tower",
+      "powerMegawatts": 30,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_ResourceSink_C": {
+      "name": "AWESOME Sink",
+      "powerMegawatts": 30,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_SmelterMk1_C": {
+      "name": "Smelter",
+      "powerMegawatts": 4,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    },
+    "Build_StreetLight_C": {
+      "name": "Street Light",
+      "powerMegawatts": 1,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_Tractor_C": {
+      "name": "Tractor",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 55,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_TrainDockingStationLiquid_C": {
+      "name": "Fluid Freight Platform",
+      "powerMegawatts": 50,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_TrainDockingStation_C": {
+      "name": "Freight Platform",
+      "powerMegawatts": 50,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_TrainStation_C": {
+      "name": "Train Station",
+      "powerMegawatts": 50,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_TruckStation_C": {
+      "name": "Truck Station",
+      "powerMegawatts": 20,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_Truck_C": {
+      "name": "Truck",
+      "powerMegawatts": 0,
+      "generatorMegawatts": 75,
+      "powerExponent": 1.0,
+      "boostExponent": 2.0
+    },
+    "Build_WaterPump_C": {
+      "name": "Water Extractor",
+      "powerMegawatts": 20,
+      "generatorMegawatts": 0,
+      "powerExponent": 1.3219280948873624,
+      "boostExponent": 2.0
+    }
+  },
+  "variableRecipes": {
+    "Recipe_AlienPowerFuel_C": {
+      "name": "Alien Power Matrix",
+      "building": "Build_QuantumEncoder_C",
+      "durationSeconds": 24,
+      "minMegawatts": 0,
+      "maxMegawatts": 2000
+    },
+    "Recipe_Alternate_DarkMatter_Crystallization_C": {
+      "name": "Dark Matter Crystallization",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 3,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_Alternate_DarkMatter_Trap_C": {
+      "name": "Dark Matter Trap",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 2,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_Alternate_Diamond_Cloudy_C": {
+      "name": "Cloudy Diamonds",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 3,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_Alternate_Diamond_OilBased_C": {
+      "name": "Oil-Based Diamonds",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 3,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_Alternate_Diamond_Petroleum_C": {
+      "name": "Petroleum Diamonds",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 2,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_Alternate_Diamond_Pink_C": {
+      "name": "Pink Diamonds",
+      "building": "Build_Converter_C",
+      "durationSeconds": 4,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Alternate_Diamond_Turbo_C": {
+      "name": "Turbo Diamonds",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 3,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_Alternate_InstantPlutoniumCell_C": {
+      "name": "Instant Plutonium Cell",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 120,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_Alternate_IonizedFuel_Dark_C": {
+      "name": "Dark-Ion Fuel",
+      "building": "Build_Converter_C",
+      "durationSeconds": 3,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Bauxite_Caterium_C": {
+      "name": "Bauxite (Caterium)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Bauxite_Copper_C": {
+      "name": "Bauxite (Copper)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Caterium_Copper_C": {
+      "name": "Caterium Ore (Copper)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Caterium_Quartz_C": {
+      "name": "Caterium Ore (Quartz)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Coal_Iron_C": {
+      "name": "Coal (Iron)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Coal_Limestone_C": {
+      "name": "Coal (Limestone)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Copper_Quartz_C": {
+      "name": "Copper Ore (Quartz)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Copper_Sulfur_C": {
+      "name": "Copper Ore (Sulfur)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_DarkEnergy_C": {
+      "name": "Dark Matter Residue",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_DarkMatter_C": {
+      "name": "Dark Matter Crystal",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 2,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_Diamond_C": {
+      "name": "Diamonds",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 2,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_FicsiteIngot_AL_C": {
+      "name": "Ficsite Ingot (Aluminum)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 2,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_FicsiteIngot_CAT_C": {
+      "name": "Ficsite Ingot (Caterium)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 4,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_FicsiteIngot_Iron_C": {
+      "name": "Ficsite Ingot (Iron)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_FicsoniumFuelRod_C": {
+      "name": "Ficsonium Fuel Rod",
+      "building": "Build_QuantumEncoder_C",
+      "durationSeconds": 24,
+      "minMegawatts": 0,
+      "maxMegawatts": 2000
+    },
+    "Recipe_Ficsonium_C": {
+      "name": "Ficsonium",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 6,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_Iron_Limestone_C": {
+      "name": "Iron Ore (Limestone)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Limestone_Sulfur_C": {
+      "name": "Limestone (Sulfur)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Nitrogen_Bauxite_C": {
+      "name": "Nitrogen Gas (Bauxite)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Nitrogen_Caterium_C": {
+      "name": "Nitrogen Gas (Caterium)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Plutonium_C": {
+      "name": "Plutonium Pellet",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 60,
+      "minMegawatts": 250,
+      "maxMegawatts": 750
+    },
+    "Recipe_QuantumEnergy_C": {
+      "name": "Excited Photonic Matter",
+      "building": "Build_Converter_C",
+      "durationSeconds": 3,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Quartz_Bauxite_C": {
+      "name": "Raw Quartz (Bauxite)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Quartz_Coal_C": {
+      "name": "Raw Quartz (Coal)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_SpaceElevatorPart_10_C": {
+      "name": "Biochemical Sculptor",
+      "building": "Build_Blender_C",
+      "durationSeconds": 120,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_SpaceElevatorPart_11_C": {
+      "name": "Ballistic Warp Drive",
+      "building": "Build_ManufacturerMk1_C",
+      "durationSeconds": 60,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_SpaceElevatorPart_12_C": {
+      "name": "AI Expansion Server",
+      "building": "Build_QuantumEncoder_C",
+      "durationSeconds": 15,
+      "minMegawatts": 0,
+      "maxMegawatts": 2000
+    },
+    "Recipe_SpaceElevatorPart_9_C": {
+      "name": "Nuclear Pasta",
+      "building": "Build_HadronCollider_C",
+      "durationSeconds": 120,
+      "minMegawatts": 500,
+      "maxMegawatts": 1500
+    },
+    "Recipe_Sulfur_Coal_C": {
+      "name": "Sulfur (Coal)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Sulfur_Iron_C": {
+      "name": "Sulfur (Iron)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_SuperpositionOscillator_C": {
+      "name": "Superposition Oscillator",
+      "building": "Build_QuantumEncoder_C",
+      "durationSeconds": 12,
+      "minMegawatts": 0,
+      "maxMegawatts": 2000
+    },
+    "Recipe_SyntheticPowerShard_C": {
+      "name": "Synthetic Power Shard",
+      "building": "Build_QuantumEncoder_C",
+      "durationSeconds": 12,
+      "minMegawatts": 0,
+      "maxMegawatts": 2000
+    },
+    "Recipe_TemporalProcessor_C": {
+      "name": "Neural-Quantum Processor",
+      "building": "Build_QuantumEncoder_C",
+      "durationSeconds": 20,
+      "minMegawatts": 0,
+      "maxMegawatts": 2000
+    },
+    "Recipe_TimeCrystal_C": {
+      "name": "Time Crystal",
+      "building": "Build_Converter_C",
+      "durationSeconds": 10,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    },
+    "Recipe_Uranium_Bauxite_C": {
+      "name": "Uranium Ore (Bauxite)",
+      "building": "Build_Converter_C",
+      "durationSeconds": 6,
+      "minMegawatts": 100,
+      "maxMegawatts": 400
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "Regional coal collection feeds four component factories",
+  "kind": "plant",
+  "milestoneTier": 4,
+  "entry": [0, 0, 0],
+  "assumptions": [
+    "This is a boundary load study, not a recipe-balanced production plan or a measured save.",
+    "Fifty-two coal generators collect power for one steel campus and three motor campuses. Water extraction and fuel logistics are outside this boundary.",
+    "Each campus has its own ordinary LV wiring after a step-down transformer. This comparison includes only the collection and transmission island.",
+    "The same demand is compared on LV and MV. Factory internal losses and transformer conversion losses are excluded.",
+    "Transmission spans are straight. The entry node represents the step-up feed into the shared trunk."
+  ],
+  "blocks": [
+    {
+      "label": "Coal generator collection",
+      "building": "Build_GeneratorCoal_C",
+      "count": 52,
+      "columns": 13,
+      "clock": 1,
+      "origin": [0, 0],
+      "spacing": [30, 40],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    }
+  ],
+  "factories": [
+    {"scenario": "03-steel.json", "offset": [1000, 0, 0]},
+    {"scenario": "04-motors.json", "offset": [0, 2000, 0]},
+    {"scenario": "04-motors.json", "offset": [-2000, 0, 0]},
+    {"scenario": "04-motors.json", "offset": [0, -3000, 0]}
+  ]
+}

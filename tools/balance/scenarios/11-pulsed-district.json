@@ -1,0 +1,79 @@
+{
+  "name": "Extreme synchronized particle accelerator district",
+  "milestoneTier": 8,
+  "entry": [
+    0,
+    0,
+    0
+  ],
+  "assumptions": [
+    "Illustrative community-style modular factory, not a measured save or a recipe-complete production planner.",
+    "Counts represent a full production building mix including upstream processing. Logistics outside the stated boundary do not draw power here.",
+    "Machines run at full duty. No Somersloop boost. All unmarked clocks are 100 percent.",
+    "Coordinates and spacing in meters define a rectangular block graph. Pole branches use four machines per pole. Feed enters at the origin.",
+    "Normal crafting cycles share the mean draw. The peak column conservatively synchronizes every variable-power machine.",
+    "Scale target: three nuclear pasta per minute from six synchronized accelerators. Copper powder and cubes arrive by train, except for the stated support wing.",
+    "The six pasta cycles last 120 seconds. A linear ramp from 500 to 1500 MW per accelerator approximates the variable power curve. This is an extreme synchronized district, not the LV sizing baseline.",
+    "The transformer can thermally exceed its nominal rating until a local trip. This heat study does not use the hard-rated escrow transformer link.",
+    "The charged capacitor bank follows a 95 percent transformer setpoint. Initial energy is explicit. Extra headroom and staggered cycles are alternatives."
+  ],
+  "blocks": [
+    {
+      "label": "Copper and support constructors",
+      "building": "Build_ConstructorMk1_C",
+      "count": 40,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        0
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Supporting manufacturers",
+      "building": "Build_ManufacturerMk1_C",
+      "count": 6,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        150
+      ],
+      "spacing": [
+        24,
+        32
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Nuclear pasta",
+      "building": "Build_HadronCollider_C",
+      "count": 6,
+      "columns": 3,
+      "clock": 1,
+      "origin": [
+        20,
+        240
+      ],
+      "spacing": [
+        50,
+        70
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4,
+      "recipe": "Recipe_SpaceElevatorPart_9_C"
+    }
+  ],
+  "pulse": {
+    "transformer": "district",
+    "transformerCount": 1,
+    "bankCount": 2
+  }
+}

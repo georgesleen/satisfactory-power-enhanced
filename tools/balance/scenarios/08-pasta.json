@@ -1,0 +1,122 @@
+{
+  "name": "Tier 8 nuclear pasta and supporting copper",
+  "milestoneTier": 8,
+  "entry": [
+    0,
+    0,
+    0
+  ],
+  "assumptions": [
+    "Illustrative community-style modular factory, not a measured save or a recipe-complete production planner.",
+    "Counts represent a full production building mix including upstream processing. Logistics outside the stated boundary do not draw power here.",
+    "Machines run at full duty. No Somersloop boost. All unmarked clocks are 100 percent.",
+    "Coordinates and spacing in meters define a rectangular block graph. Pole branches use four machines per pole. Feed enters at the origin.",
+    "Normal crafting cycles share the mean draw. The peak column conservatively synchronizes every variable-power machine.",
+    "Scale target: one nuclear pasta per minute plus supporting copper powder and pressure conversion cubes. Two 100 percent accelerators provide ordinary pulses. Approximate boundary 240 by 550 meters."
+  ],
+  "blocks": [
+    {
+      "label": "Copper miners",
+      "building": "Build_MinerMk3_C",
+      "count": 4,
+      "columns": 8,
+      "clock": 1.5,
+      "origin": [
+        20,
+        0
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Copper ingots",
+      "building": "Build_SmelterMk1_C",
+      "count": 40,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        50
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Copper powder and wire",
+      "building": "Build_ConstructorMk1_C",
+      "count": 48,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        180
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Supporting components",
+      "building": "Build_AssemblerMk1_C",
+      "count": 20,
+      "columns": 8,
+      "clock": 1,
+      "origin": [
+        20,
+        320
+      ],
+      "spacing": [
+        12,
+        20
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Pressure conversion cubes",
+      "building": "Build_ManufacturerMk1_C",
+      "count": 8,
+      "columns": 8,
+      "clock": 1.25,
+      "origin": [
+        20,
+        400
+      ],
+      "spacing": [
+        24,
+        32
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4
+    },
+    {
+      "label": "Nuclear pasta",
+      "building": "Build_HadronCollider_C",
+      "count": 2,
+      "columns": 2,
+      "clock": 1,
+      "origin": [
+        20,
+        470
+      ],
+      "spacing": [
+        50,
+        50
+      ],
+      "wiring": "pole-branch",
+      "machinesPerPole": 4,
+      "recipe": "Recipe_SpaceElevatorPart_9_C"
+    }
+  ]
+}

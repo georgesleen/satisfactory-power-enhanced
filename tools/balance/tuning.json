@@ -1,0 +1,27 @@
+{
+  "status": "Initial tuning, not final balance",
+  "tiers": [
+    {"name": "LV", "unlockTier": 0, "capacityMegawatts": 12000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0.12},
+    {"name": "MV", "unlockTier": 3, "capacityMegawatts": 48000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0.08},
+    {"name": "HV", "unlockTier": 6, "capacityMegawatts": 192000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0.02},
+    {"name": "SC", "unlockTier": 9, "capacityMegawatts": 768000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0}
+  ],
+  "transformers": [
+    {"name": "local", "ratingMegawatts": 2000},
+    {"name": "district", "ratingMegawatts": 7000},
+    {"name": "backbone", "ratingMegawatts": 24000}
+  ],
+  "thermal": {"timeConstantSeconds": 15, "warningHeat": 1, "tripHeat": 1.44},
+  "capacitorBank": {
+    "capacityMegajoules": 60000, "maxChargeMegawatts": 2000, "maxDischargeMegawatts": 2000,
+    "chargeEfficiency": 0.95, "setpointFraction": 0.95, "footprintSquareMeters": 16,
+    "initialBuildMaterials": {"EncasedIndustrialBeam": 5, "ModularFrame": 10, "Wire": 100, "AlcladAluminumSheet": 20, "AILimiter": 10}
+  },
+  "acceptance": {"comfortLoadFraction": 0.8, "localLossLimit": 0.03},
+  "simulation": {"stepSeconds": 0.1, "durationSeconds": 1800},
+  "vanillaPowerStorage": {
+    "capacityMegajoules": 360000, "maxChargeMegawatts": 100, "discharge": "unlimited", "comparisonCount": 30,
+    "footprintSquareMeters": 36,
+    "buildMaterials": {"EncasedIndustrialBeam": 5, "ModularFrame": 10, "Wire": 100}
+  }
+}
