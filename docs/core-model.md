@@ -15,12 +15,16 @@ from it independently.
 - Namespace: `EnhancedPower`. All declarations below live in it.
 - Headers: `Source/EnhancedPowerCore/Public/EnhancedPowerCore/<Name>.h`.
 - Sources: `Source/EnhancedPowerCore/Private/<Name>.cpp`.
+- `Export.h` defines an empty `ENHANCEDPOWERCORE_API` only when the build has
+  not defined it. Non-inline function declarations carry this macro for the
+  Unreal runtime module; host builds need no engine headers or DLL machinery.
 - Functions are pure: they read their arguments and return a value. They never
   write through a parameter.
 - Floating point is `double`. Tests compare with an absolute tolerance of
   `1e-9` unless a section states otherwise.
-- "Precondition" means the caller guarantees it. The function still returns a
-  finite value when a precondition is broken, as each section specifies.
+- "Precondition" means the caller guarantees it. Numeric inputs are finite
+  unless a section explicitly specifies non-finite behavior. Only the stated
+  clamping and special-input rules are part of the contract.
 
 ## Units (`Units.h`)
 
@@ -79,23 +83,26 @@ Preconditions: `TimeConstant > 0`, `0 < WarningHeat < TripHeat`.
 
 1. If `Delta <= 0`, return `State` unchanged.
 2. `r = max(LoadRatio, 0)`. A negative or NaN ratio counts as 0.
-3. `Target = State.Tripped ? 0 : r * r`.
+3. `AlreadyTripped = State.Tripped || State.Heat >= TripHeat`.
+   `Target = AlreadyTripped ? 0 : r * r`.
 4. `Heat' = Target + (State.Heat - Target) * exp(-Delta / TimeConstant)`.
-5. `Tripped' = State.Tripped || Heat' >= TripHeat`.
+   If `!AlreadyTripped`, `Target <= TripHeat`, and rounding makes
+   `Heat' >= TripHeat`, use `nextafter(TripHeat, 0)` instead. A trajectory
+   approaching the trip threshold from below must not trip through rounding.
+5. `Tripped' = AlreadyTripped || Heat' >= TripHeat`.
 6. Return `{Heat', Tripped'}`.
 
 The exact exponential makes one step of `2 * d` equal two steps of `d` when
 the ratio does not change and no trip occurs.
 
-`ClassifyThermal`: `Tripped` if `State.Tripped`; else `Warning` if
-`State.Heat >= WarningHeat`; else `Normal`.
+`ClassifyThermal`: `Tripped` if `State.Tripped` or `State.Heat >= TripHeat`;
+else `Warning` if `State.Heat >= WarningHeat`; else `Normal`.
 
 `TimeToTrip` gives the time until a trip if `LoadRatio` stays constant:
 
-- If `State.Tripped`, return `Seconds{0}`.
+- If `State.Tripped` or `State.Heat >= TripHeat`, return `Seconds{0}`.
 - `r = max(LoadRatio, 0)`; if `r * r <= TripHeat`, return `std::nullopt`
   (the load never trips).
-- If `State.Heat >= TripHeat`, return `Seconds{0}`.
 - Else return `TimeConstant * ln((r*r - Heat) / (r*r - TripHeat))`.
 
 `TryResetThermal` is the manual breaker reset:
@@ -196,7 +203,11 @@ Preconditions: `Rating > 0`, `0 < Efficiency <= 1`, `EscrowCapacity > 0`,
    `Room = EscrowCapacity - (E - ExpectedDraw)`,
    `PrimaryRequest = min(Room / (Efficiency * Delta), State.LastDelivered / Efficiency + MaxRecharge)`.
 
-`SettleLink` takes what the engine reports after its solve:
+`SettleLink` takes what the engine reports after its solve. Start with a plan
+from `PlanLink` for the same parameters, state, and delta. An engine adapter may
+reduce either power to a nonnegative value to meet its representable range or
+open the connection; it must never increase either value. Settle that plan
+exactly once before planning the next interval.
 
 1. If `Delta <= 0`, return `{State, 0, 0, 0, 0}`.
 2. `E = clamp(State.Escrow, 0, EscrowCapacity)`.
