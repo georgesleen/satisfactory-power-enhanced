@@ -20,17 +20,18 @@ the game yet.
 | Shell | Command | Purpose |
 | --- | --- | --- |
 | Default | `nix develop` | Core code, tests, formatting, balance |
-| Assets | `nix develop path:.#assets` | Blender and ffmpeg |
-| Bootstrap | `nix develop path:.#bootstrap` | Authorized vendor and server acquisition |
-| Mod | `nix develop path:.#mod` | Licensed engine, MSVC, and Wwise |
+| Assets | `nix develop .#assets` | Blender and ffmpeg |
+| Bootstrap | `nix develop .#bootstrap` | Authorized vendor and server acquisition |
+| Mod | `nix develop .#mod` | Licensed engine, MSVC, and Wwise |
 
 The default shell provides GCC, CMake, Ninja, doctest, nlohmann_json,
 clang-tools, Python, nixfmt, and shellcheck. It needs no licensed vendor payload
 or `nix/wwise-source.json`. The assets shell needs no vendor payload either.
 Enter the default shell with `nix develop` or `direnv allow`.
 
-Use `path:.` while adding files that are not tracked by Git.
-Git-backed flake references omit untracked files.
+Use `path:.` only when intentionally including untracked Nix inputs.
+Git-backed references omit untracked files and avoid copying ignored build and
+animation-frame trees. Blender reads its scripts from the working directory.
 
 ## Host development
 
@@ -162,7 +163,7 @@ make smoke
 ```
 
 The bootstrap shell does not require vendor payloads and is available as
-`nix develop path:.#bootstrap`. The vendor shell is `nix develop path:.#mod`.
+`nix develop .#bootstrap`. The vendor shell is `nix develop .#mod`.
 It prints an actionable message and leaves `WWISE_ROOT` unset when
 `nix/wwise-source.json` is missing. The `wwise` package is exposed only after
 this lock exists. Core checks and the default and assets shells do not import
@@ -198,7 +199,7 @@ upstream project files and generated build output. `make editor`,
 they are not replacement build systems. The linked plugin builds with
 `FactoryEditor`.
 
-`nix run path:.` or `make shell` enters the FHS runtime. The mod shell supplies
+`nix run .` or `make shell` enters the FHS runtime. The mod shell supplies
 its launcher and vendor paths. Unreal and Wine commands run inside FHS.
 `make core-msvc` compiles every core source with the packaged MSVC under Wine.
 It uses C++20, `/W4 /WX`, conformance mode, and the Unreal exception-disabled
@@ -285,7 +286,7 @@ Inspect storage without deleting anything:
 
 ```sh
 du -h -d 2 "${SF_ROOT:-${XDG_DATA_HOME:-$HOME/.local/share}/sf}"
-nix path-info -Sh path:.#engine path:.#msvc path:.#wwise
+nix path-info -Sh .#engine .#msvc .#wwise
 nix-store --gc --print-roots
 nix-store --gc --print-dead
 ```

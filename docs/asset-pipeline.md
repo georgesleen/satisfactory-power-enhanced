@@ -9,7 +9,7 @@ browser interaction is not a gameplay feature.
 Use the assets shell independently of the licensed mod toolchain:
 
 ```sh
-nix develop path:.#assets
+nix develop .#assets
 ```
 
 The shell supplies Blender, its built-in Python API, and ffmpeg, without the
@@ -40,7 +40,7 @@ camera poses, and state timing stay in each `generate.py`.
 Run the generator in background Blender from the repository root:
 
 ```sh
-nix develop path:.#assets --command blender --background --factory-startup --threads 3 --python assets/<model>/generate.py -- --animate
+nix develop .#assets --command blender --background --factory-startup --threads 3 --python assets/<model>/generate.py -- --animate
 ```
 
 The generator clears the scene and replaces its named outputs. Do not use it to

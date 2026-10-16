@@ -11,10 +11,10 @@ The root CMake project adds `tools/balance`. The CLI links
 the required JSON package without licensed engine files.
 
 ```sh
-nix develop path:. --command cmake -S . -B build/balance-host -G Ninja
-nix develop path:. --command cmake --build build/balance-host --target ep-balance -j4
-nix develop path:. --command ./build/balance-host/tools/balance/ep-balance --tuning tools/balance/tuning.json tools/balance/scenarios
-nix develop path:. --command ctest --test-dir build/balance-host -R 'enhanced_power_balance|enhanced_power_building_extraction' --output-on-failure
+nix develop --command cmake -S . -B build/balance-host -G Ninja
+nix develop --command cmake --build build/balance-host --target ep-balance -j4
+nix develop --command ./build/balance-host/tools/balance/ep-balance --tuning tools/balance/tuning.json tools/balance/scenarios
+nix develop --command ctest --test-dir build/balance-host -R 'enhanced_power_balance|enhanced_power_building_extraction' --output-on-failure
 ```
 
 The balance and extraction tests pass: `100% tests passed out of 3`.

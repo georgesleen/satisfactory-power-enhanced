@@ -62,57 +62,57 @@ balance: configure
 	./$(BUILD_DIR)/tools/balance/ep-balance --tuning tools/balance/tuning.json tools/balance/scenarios
 
 core-msvc: wine-prefix
-	nix run path:. -- -c 'set -e; mkdir -p $(MSVC_BUILD_DIR); "$$UE_WINE_MSVC/bin/x64/cl" $(MSVC_FLAGS) /ISource/EnhancedPowerCore/Public /Fo$(MSVC_BUILD_DIR)/ $(CORE_SOURCES); wineserver -w'
+	nix run . -- -c 'set -e; mkdir -p $(MSVC_BUILD_DIR); "$$UE_WINE_MSVC/bin/x64/cl" $(MSVC_FLAGS) /ISource/EnhancedPowerCore/Public /Fo$(MSVC_BUILD_DIR)/ $(CORE_SOURCES); wineserver -w'
 
 bootstrap-starter:
-	nix develop path:.\#bootstrap -c bash nix/bootstrap-starter.sh
+	nix develop .\#bootstrap -c bash nix/bootstrap-starter.sh
 
 bootstrap-engine:
-	nix develop path:.\#bootstrap -c bash nix/bootstrap-engine.sh
+	nix develop .\#bootstrap -c bash nix/bootstrap-engine.sh
 
 bootstrap-msvc:
-	nix develop path:.\#bootstrap -c bash nix/bootstrap-msvc.sh
+	nix develop .\#bootstrap -c bash nix/bootstrap-msvc.sh
 
 bootstrap-wwise:
-	nix develop path:.\#bootstrap -c bash nix/bootstrap-wwise.sh
+	nix develop .\#bootstrap -c bash nix/bootstrap-wwise.sh
 
 import-wwise:
-	nix develop path:.\#bootstrap -c bash nix/import-wwise.sh
+	nix develop .\#bootstrap -c bash nix/import-wwise.sh
 
 toolchain:
-	nix build path:.\#engine path:.\#msvc $(if $(wildcard nix/wwise-source.json),path:.\#wwise) --no-link
+	nix build .\#engine .\#msvc $(if $(wildcard nix/wwise-source.json),.\#wwise) --no-link
 
 shell:
-	nix run path:.
+	nix run .
 
 wine-prefix:
-	nix run path:. -- -c 'env -u DISPLAY -u WAYLAND_DISPLAY WINEDLLOVERRIDES="mscoree,mshtml=" wineboot -u && wineserver -w'
+	nix run . -- -c 'env -u DISPLAY -u WAYLAND_DISPLAY WINEDLLOVERRIDES="mscoree,mshtml=" wineboot -u && wineserver -w'
 
 smoke: wine-prefix
-	nix run path:. -- -c 'set -e; wine --version; wwise-cli --help; "$$UE_ROOT/Engine/Binaries/ThirdParty/DotNet/8.0.300/linux-x64/dotnet" --info; "$$UE_WINE_MSVC/bin/x64/cl" /?; wineserver -w; test -f "$$UE_ROOT/Engine/Build/InstalledBuild.txt"; test -L "$$SML_DIR/Mods/EnhancedPower"'
+	nix run . -- -c 'set -e; wine --version; wwise-cli --help; "$$UE_ROOT/Engine/Binaries/ThirdParty/DotNet/8.0.300/linux-x64/dotnet" --info; "$$UE_WINE_MSVC/bin/x64/cl" /?; wineserver -w; test -f "$$UE_ROOT/Engine/Build/InstalledBuild.txt"; test -L "$$SML_DIR/Mods/EnhancedPower"'
 
 editor:
-	nix run path:. -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" FactoryEditor Linux Development -project="$$SML_DIR/FactoryGame.uproject" -MaxParallelActions=4'
+	nix run . -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" FactoryEditor Linux Development -project="$$SML_DIR/FactoryGame.uproject" -MaxParallelActions=4'
 
 project-files:
-	nix run path:. -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" -projectfiles -project="$$SML_DIR/FactoryGame.uproject" -game -Makefile'
+	nix run . -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" -projectfiles -project="$$SML_DIR/FactoryGame.uproject" -game -Makefile'
 
 compile-db:
-	nix run path:. -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/RunUBT.sh" FactoryEditor Linux Development "$$SML_DIR/FactoryGame.uproject" -Compiler=Clang -mode=GenerateClangDataBase -OutputDir="$$SML_DIR"'
+	nix run . -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/RunUBT.sh" FactoryEditor Linux Development "$$SML_DIR/FactoryGame.uproject" -Compiler=Clang -mode=GenerateClangDataBase -OutputDir="$$SML_DIR"'
 
 integrate-wwise:
-	nix develop path:.\#mod -c bash nix/integrate-wwise.sh
+	nix develop .\#mod -c bash nix/integrate-wwise.sh
 
 bootstrap-server:
-	nix develop path:.\#bootstrap -c bash nix/bootstrap-server.sh
+	nix develop .\#bootstrap -c bash nix/bootstrap-server.sh
 
 server-smoke:
-	nix run path:.\#server-smoke
+	nix run .\#server-smoke
 
 mod-build: editor
 
 mod-package:
-	nix run path:. -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" -ScriptsForProject="$$SML_DIR/FactoryGame.uproject" PackagePlugin -Project="$$SML_DIR/FactoryGame.uproject" -dlcname=EnhancedPower -merge -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Linux -nocompileeditor -installed -UbtArgs=-MaxParallelActions=4'
+	nix run . -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" -ScriptsForProject="$$SML_DIR/FactoryGame.uproject" PackagePlugin -Project="$$SML_DIR/FactoryGame.uproject" -dlcname=EnhancedPower -merge -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Linux -nocompileeditor -installed -UbtArgs=-MaxParallelActions=4'
 
 mod-deploy:
-	nix run path:. -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" -ScriptsForProject="$$SML_DIR/FactoryGame.uproject" PackagePlugin -Project="$$SML_DIR/FactoryGame.uproject" -dlcname=EnhancedPower -merge -build -server -noclient -serverconfig=Shipping -serverplatform=Linux -nocompileeditor -installed -UbtArgs=-MaxParallelActions=4 -CopyToGameDirectory_LinuxServer="$$SF_ROOT/server-instance"'
+	nix run . -- -c '"$$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" -ScriptsForProject="$$SML_DIR/FactoryGame.uproject" PackagePlugin -Project="$$SML_DIR/FactoryGame.uproject" -dlcname=EnhancedPower -merge -build -server -noclient -serverconfig=Shipping -serverplatform=Linux -nocompileeditor -installed -UbtArgs=-MaxParallelActions=4 -CopyToGameDirectory_LinuxServer="$$SF_ROOT/server-instance"'

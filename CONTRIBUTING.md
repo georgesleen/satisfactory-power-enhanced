@@ -39,13 +39,13 @@ belongs in `build`.
 For art, enter the separate assets shell:
 
 ```sh
-nix develop path:.#assets
+nix develop .#assets
 ```
 
 It supplies Blender without the licensed engine, MSVC, Wwise, or Wine. See the
 [asset pipeline](docs/asset-pipeline.md) for source and preview commands.
 
-For runtime work, enter `nix develop path:.#mod`.
+For runtime work, enter `nix develop .#mod`.
 Follow [Development](docs/development.md) for official licensed vendor acquisition,
 the FHS runtime, and acceptance checks. `make core-msvc` checks core portability
 with packaged MSVC under Wine. Do not redistribute vendor downloads, credentials,
