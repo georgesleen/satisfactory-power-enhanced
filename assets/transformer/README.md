@@ -11,10 +11,10 @@ This is an HV-to-MV visual concept, not a shipped gameplay capacity or voltage r
 From the repository root, with Nix flakes enabled:
 
 ```sh
-nix develop path:.#assets --command blender --background --factory-startup --threads 6 --python assets/transformer/generate.py -- --animate
+nix develop .#assets --command blender --background --factory-startup --threads 3 --python assets/transformer/generate.py -- --animate
 ```
 
-The explicit `path:.` flake includes new local source files before they are tracked by Git.
+Blender reads model scripts from the working directory; they do not need a Nix source snapshot.
 The command generates:
 
 - `transformer.blend`: editable scene, materials, studio and hero camera.
@@ -32,11 +32,15 @@ unsaved working scene. Repeated generation replaces the named outputs.
 Render only selected views or change image quality with script arguments:
 
 ```sh
-nix develop path:.#assets --command blender --background --factory-startup --threads 6 --python assets/transformer/generate.py -- --animate --views hero service --width 1280 --samples 40
+nix develop .#assets --command blender --background --factory-startup --threads 3 --python assets/transformer/generate.py -- --animate --views hero service --width 1280 --samples 40
 ```
 
 Rendering uses Cycles CPU with denoising, 40 samples, 1280 x 960, AgX and large area
 lights. No interactive graphics context, Unreal, Wine or Windows compiler is needed.
+
+The generator imports `../common/epkit.py`. The shared kit supplies primitives,
+materials, labels, state keys, metrics and the studio rig. Transformer geometry,
+camera poses and state timing live in `generate.py`.
 
 ## Operating animation
 
@@ -53,9 +57,9 @@ the readout shows `ISOLATED` and the lamp is unlit. The fan ducts and oil vessel
 Generate the stills, keyed scene and low-sample 640 x 480 animation frames, then encode:
 
 ```sh
-nix develop path:.#assets --command blender --background --factory-startup --threads 6 --python assets/transformer/generate.py -- --animate --render-animation --animation-samples 8
-nix develop path:.#assets --command ffmpeg -y -framerate 12 -i assets/transformer/renders/animation/frame_%04d.png -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart assets/transformer/renders/transformer-operating.mp4
-nix develop path:.#assets --command ffmpeg -y -framerate 12 -i assets/transformer/renders/animation/frame_%04d.png -vf "select='eq(n,0)+eq(n,28)+eq(n,44)+eq(n,59)',tile=2x2" -frames:v 1 -update 1 assets/transformer/renders/animation-states.png
+nix develop .#assets --command blender --background --factory-startup --threads 3 --python assets/transformer/generate.py -- --animate --render-animation --animation-samples 8
+nix develop .#assets --command ffmpeg -y -framerate 12 -i assets/transformer/renders/animation/frame_%04d.png -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart assets/transformer/renders/transformer-operating.mp4
+nix develop .#assets --command ffmpeg -y -framerate 12 -i assets/transformer/renders/animation/frame_%04d.png -vf "select='eq(n,0)+eq(n,28)+eq(n,44)+eq(n,59)',tile=2x2" -frames:v 1 -update 1 assets/transformer/renders/animation-states.png
 ```
 
 `renders/transformer-operating.mp4` shows actual moving machine parts, not an orbit.
