@@ -19,6 +19,7 @@ prototype run independently; an installable game mod is not available.
 ## Documents
 
 - [Design](docs/design.md): mechanics and the reasons for them.
+- [Core model](docs/core-model.md): exact rules of the engine-free simulation core.
 - [Roadmap](docs/roadmap.md): critical path and later phases.
 - [Prior art](docs/prior-art.md): existing Satisfactory and Minecraft mods.
 - [Development](docs/development.md): source contracts and transformer experiment blockers.

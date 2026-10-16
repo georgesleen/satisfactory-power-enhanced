@@ -119,6 +119,19 @@ ring layout prevents the cascade.
 A power shard in a transformer raises its rating. Each shard also raises its
 heat and loss.
 
+A transformer is directional: power flows from its primary side to its
+secondary side. The player chooses the direction at build time, so a
+generator island steps up into HV and a factory island steps down from it.
+Placement refuses a transformer that would close a loop of transformers.
+Several transformers can still feed one island from different sources.
+
+Each transformer holds a small energy store. The secondary side draws only
+energy that the store already holds, and the primary side refills it. The
+transformer never creates energy, whatever order the game settles the islands
+in. After an upstream failure, the store carries the secondary island for a
+moment, which makes the failure visible before the lights go out.
+[Core model](core-model.md) specifies the accounting.
+
 ### Transmission loss
 
 Loss grows with load and transmission distance, and falls as the tier goes up.
@@ -322,13 +335,15 @@ ratings, costs, unlocks, and whether these mechanics ship remain open.
 - **LV factory comfort.** Ordinary factories, overclocking, and normal pulses
   fit vanilla wiring; higher tiers address distance and aggregation.
 - **Capacitors are optional peak support**, not a requirement per machine.
+- **Directional transformers in an acyclic graph**, each with a small energy
+  store. See [Transformers](#transformers).
 
 ## Open decisions
 
 1. **Tier capacities**, the station transformer rating, and the exact SC
    milestone.
-2. **Engine hooks.** Whether SML can replace the vanilla fuse and circuit
-   logic cleanly. A prototype must answer this before the mechanics are fixed.
+2. **Engine hooks.** The power probe in `Source/EnhancedPower/` measures the
+   vanilla solve order and callback semantics on a dedicated server.
 3. **Cooling supply.** Which items or fluids, the rate, and the station
    spacing.
 4. **Loss distance metric.** Total wire length versus spatial extent or a
