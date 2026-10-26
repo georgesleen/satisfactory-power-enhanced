@@ -45,6 +45,17 @@ nix develop .#assets
 It supplies Blender without the licensed engine, MSVC, Wwise, or Wine. See the
 [asset pipeline](docs/asset-pipeline.md) for source and preview commands.
 
+For browser menus, build and serve the staged UI:
+
+```sh
+nix develop .#ui -c make ui
+nix develop .#ui -c make ui-preview
+```
+
+Open <http://127.0.0.1:8080/>. The UI shell supplies Emscripten and Python,
+without licensed game tools. Serve `build/ui/`, not raw `assets/ui/`: the build
+adds the C++ core WebAssembly module. See the [UI guide](assets/ui/README.md).
+
 For runtime work, enter `nix develop .#mod`.
 Follow [Development](docs/development.md) for official licensed vendor acquisition,
 the FHS runtime, and acceptance checks. `make core-msvc` checks core portability
@@ -58,12 +69,16 @@ or proprietary engine content.
 - `docs/balance.md`: initial tuning and `ep-balance` results.
 - `docs/roadmap.md`: implementation sequence.
 - `docs/development.md`: shells, the transformer probe, toolchain, and server.
+- `docs/art-direction.md`, `docs/ui-spec.md`: equipment and building-menu contracts.
 - `Source/EnhancedPowerCore/`: engine-free simulation core.
 - `Source/EnhancedPower/`: Unreal runtime module; it calls the core.
 - `tools/balance/`: balance CLI, scenarios, tuning, and report gates.
+- `Tests/Assets/`: host tests for game asset delivery integrity; they do not
+  check FBX format or Unreal import.
 - `assets/<model>/`: Blender generator, editable scene, and review renders;
   `assets/common/epkit.py` is the shared kit.
-- `assets/ui/`: standalone browser interface prototype with simulated data.
+- `assets/ui/`: browser building menus backed by the real C++ core through
+  WebAssembly, not live game data or native widgets.
 - `nix/`, `flake.nix`, and `Makefile`: toolchain definitions and commands.
 
 Paths in the development document that refer to the official starter are

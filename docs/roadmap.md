@@ -33,17 +33,26 @@ retroactively invalidate a healthy LV factory.
 - Transformers with a MW rating.
 - Load sharing between transformers, with cascade trips.
 - Transformer overclocking with power shards.
-- Tier capacities.
+- Tier capacities for LV, MV, and HV.
 - Transmission loss by load, tier, and a distance metric validated against
   compact local wiring.
 - Local overload: heat warning, then a trip of the overloaded element only.
 - Optional capacitor banks for extreme pulsed loads, as an alternative to extra
   headroom, not mandatory equipment for every machine.
-- Superconducting lines with cryo stations that consume a cooling supply.
+- Superconducting lines with no capacity cap and cryo stations that consume a
+  cooling supply; a line without cooling stops superconducting.
 - Zipline speed by tier.
 - Ambient feedback: lights dim and flicker, lines sag and hum, trips flash.
 - Diagnostic tool and load overlay.
 - Unlocks tied to the vanilla milestones.
+- Implement the transformer, capacitor-bank and cryo-station interaction menus
+  before minimal tier, loading and feeding-transformer additions to vanilla
+  power-pole menus. Follow the [UI specification](ui-spec.md); the real-core
+  browser reference is not native UMG/FactoryGame integration.
+- Follow the [art direction](art-direction.md) for equipment. Accept UVs,
+  baked materials, LODs, collision and exports through the
+  [asset pipeline](asset-pipeline.md), then verify real equipment imports and
+  building behavior in the target engine.
 
 ### Player-facing acceptance
 

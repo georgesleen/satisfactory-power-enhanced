@@ -8,7 +8,7 @@
 | `Tests/Core/` | doctest host tests for the core | `make test`, `make check` |
 | `tools/balance/` | `ep-balance` CLI, scenarios, tuning, and report gates; see [Balance](balance.md) | `make balance`, `make test` |
 | `EnhancedPower.uplugin`, `Source/EnhancedPower/` | SML plugin with a server-only transformer probe | Not compiled |
-| `assets/` | Blender models and the browser UI study; see [Asset pipeline](asset-pipeline.md) | Assets shell |
+| `assets/` | Blender equipment and real-core browser building menus; see [Asset pipeline](asset-pipeline.md) | Separate assets and UI shells |
 
 The core is plain C++20 with no Unreal headers. Its Unreal module entry point,
 `EnhancedPowerCoreModule.cpp`, is excluded from the host build. The runtime
@@ -21,12 +21,13 @@ the game yet.
 | --- | --- | --- |
 | Default | `nix develop` | Core code, tests, formatting, balance |
 | Assets | `nix develop .#assets` | Blender and ffmpeg |
+| UI | `nix develop .#ui` | Emscripten and Python for browser building menus |
 | Bootstrap | `nix develop .#bootstrap` | Authorized vendor and server acquisition |
 | Mod | `nix develop .#mod` | Licensed engine, MSVC, and Wwise |
 
 The default shell provides GCC, CMake, Ninja, doctest, nlohmann_json,
 clang-tools, Python, nixfmt, and shellcheck. It needs no licensed vendor payload
-or `nix/wwise-source.json`. The assets shell needs no vendor payload either.
+or `nix/wwise-source.json`. The assets and UI shells need no vendor payload either.
 Enter the default shell with `nix develop` or `direnv allow`.
 
 Use `path:.` only when intentionally including untracked Nix inputs.
@@ -45,8 +46,11 @@ make check
 ```
 
 `make test` configures the root CMake project, builds with at most four jobs,
-and runs CTest: the core tests, the balance scenarios, and the balance report
-and extraction tests. CMake writes the compile command database in `build`.
+and runs CTest: the core tests, delivery-integrity tests, balance scenarios, and
+balance report and extraction tests. Delivery integrity uses Python's standard
+library and temporary opaque files; it checks schema, hashes and file corruption,
+not FBX format or Unreal import. CMake writes the compile command database in
+`build`.
 `make balance` builds `ep-balance` and prints the report for
 `tools/balance/scenarios`.
 
@@ -60,6 +64,40 @@ tracked `hooks/pre-push` automatically, and the hook runs this gate.
 `Source`, `Tests`, and `tools`, checks Nix formatting, and runs shellcheck on
 `nix/*.sh` and `hooks/*`. `.clang-format` uses tab indentation, Allman braces,
 and a 110-column limit.
+
+## Browser building menus
+
+```sh
+nix develop .#ui -c make ui
+nix develop .#ui -c make ui-preview
+```
+
+Open <http://127.0.0.1:8080/>. `UI_PORT=8081` selects another loopback port.
+`make ui` compiles the engine-free C++ core to WebAssembly and stages sources,
+fonts and generated modules under `build/ui/`. `make ui-preview` builds first,
+then serves that directory. Do not serve raw `assets/ui/`; it has no generated
+`core.wasm`. The default shell does not include Emscripten.
+
+The browser menus use real core transport, thermal, storage and loss rules
+with synthetic scenarios, not live game data. Cryo supply and warm-line behavior
+are unspecified concepts. The power-pole addition is a preview, not a vanilla
+menu hook. Native UMG/FactoryGame menus are not implemented. See the
+[UI guide](../assets/ui/README.md) for controls and limits, and the
+[UI specification](ui-spec.md) for the native integration contract.
+
+## Generic asset import
+
+The sealed transformer delivery passed a separate blank-project UE 5.6.1
+commandlet import. All 35 listed hashes matched before and after import. The
+engine readbacks verified mesh LODs, material-slot names, collision hull counts,
+texture settings, sockets and four saved, attached StaticMeshActors. The run
+exited zero with no errors and eight retained editor ACL compression-configuration
+warnings; it was not warning-free.
+
+This is generic import and hierarchy evidence, not rendered shading,
+FactoryGame material/Customizer compatibility, runtime LOD transitions,
+collision traversal, build clearance or gameplay acceptance. It does not compile
+or exercise the runtime probe. See the [asset pipeline](asset-pipeline.md#game-material-and-unreal-import).
 
 ## Transformer probe
 
@@ -167,7 +205,8 @@ The bootstrap shell does not require vendor payloads and is available as
 It prints an actionable message and leaves `WWISE_ROOT` unset when
 `nix/wwise-source.json` is missing. The `wwise` package is exposed only after
 this lock exists. Core checks and the default and assets shells do not import
-the Wwise SDK. `make toolchain` realizes engine and MSVC, plus Wwise when locked.
+the Wwise SDK. `make toolchain` roots the FHS runtime, engine and MSVC, plus
+Wwise when locked, under this checkout's ignored `.direnv`.
 Use `make bootstrap-wwise` with an Audiokinetic account, then `make import-wwise`.
 Bootstrap prompts without echoing the password and does not persist it.
 Review applicable vendor terms before downloading. Bootstrap is not permission
@@ -199,8 +238,10 @@ upstream project files and generated build output. `make editor`,
 they are not replacement build systems. The linked plugin builds with
 `FactoryEditor`.
 
-`nix run .` or `make shell` enters the FHS runtime. The mod shell supplies
-its launcher and vendor paths. Unreal and Wine commands run inside FHS.
+`make shell` roots the toolchain and enters the FHS runtime. The mod shell
+supplies its launcher and vendor paths. Direct `nix run .` enters the same runtime
+but does not keep a project GC root; run `make toolchain` first when using it.
+Unreal and Wine commands run inside FHS.
 `make core-msvc` compiles every core source with the packaged MSVC under Wine.
 It uses C++20, `/W4 /WX`, conformance mode, and the Unreal exception-disabled
 configuration. It creates object files under `build/msvc`; it does not link or
@@ -271,7 +312,7 @@ through the console or `RunCommand`.
 | `$SF_ROOT/bootstrap` | Temporary licensed acquisition/extraction workspaces |
 | `$SF_ROOT/home`, `$SF_ROOT/config`, `$SF_ROOT/tmp`, `$SF_ROOT/wine` | Disposable runtime state and Wine prefix |
 | `$SF_ROOT/s` | Writable official starter checkout, integrated plugins, build output |
-| Repo `.direnv` | direnv environments and their Nix GC roots |
+| Repo `.direnv` | direnv environments and explicit project toolchain GC roots |
 | Repo `Binaries`, `Intermediate`, `Saved`, `DerivedDataCache` | Ignored generated mod output |
 
 Engine archive parts total 8,264,339,940 bytes before extraction. Importing
@@ -281,6 +322,25 @@ have temporary download/cache, archive, and unpacked copies. Budget peak
 space rather than assuming zero duplication. `requireFile` sources can
 remain reachable through derivations even after their original downloads
 are removed.
+
+`make toolchain` creates `.direnv/toolchain-runtime`, which keeps the FHS
+closure and its engine and MSVC outputs. If Wwise is locked, it also creates
+`.direnv/toolchain-wwise`. Shell, Wine and Unreal build targets depend on this
+step; the default, UI and assets shells do not. A `--no-link` build or a direct
+`nix run` does not keep outputs after exit, so garbage collection can remove
+them. Keep the acquisition archives if offline restoration matters.
+
+To release only these roots, stop Unreal and Wine, then run:
+
+```sh
+rm -- .direnv/toolchain-runtime
+# Only if a locked Wwise realization created it:
+rm -- .direnv/toolchain-wwise
+```
+
+Removing a root does not collect packages or erase acquisition caches. Other
+direnv, shell or project roots can still keep the closure; inspect them before
+garbage collection.
 
 Inspect storage without deleting anything:
 

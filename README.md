@@ -9,8 +9,9 @@ superconductors.
 Status: the mechanics are planned gameplay, not a playable mod. The
 engine-free simulation core and the balance tool build and pass host tests. A
 server-only transformer probe is written against the SML headers but is not
-compiled or run in the game. Blender models and a browser UI study run on their
-own.
+compiled or run in the game. Blender equipment studies and browser building
+menus are separate from game integration. The menus run the real core through
+WebAssembly; native UMG/FactoryGame menus are not implemented.
 
 ## Design rules
 
@@ -27,6 +28,7 @@ make test            # core and balance host tests
 make balance         # balance report for the sample factories
 make check           # the pre-push and CI gate
 nix develop .#assets # Blender and ffmpeg
+nix develop .#ui -c make ui-preview # build and serve the browser menus
 make server-smoke    # dedicated server smoke run; needs make bootstrap-server
 ```
 
@@ -45,6 +47,8 @@ all three; see [Development](docs/development.md).
   and the dedicated server.
 - [Planned player guide](docs/player-guide.md): factory-scale LV wiring and grid choices.
 - [Asset pipeline](docs/asset-pipeline.md): modeling, rendering, and game-import boundaries.
+- [Art direction](docs/art-direction.md): equipment proportions, detail, and materials.
+- [UI specification](docs/ui-spec.md): building menus and native integration boundaries.
 - [Prior art](docs/prior-art.md): existing Satisfactory and Minecraft mods.
 - [Contributing](CONTRIBUTING.md): environments and contribution evidence.
 
@@ -56,8 +60,8 @@ Blender studies with editable scenes, generators, and renders:
 [MV pole](assets/mv-pole/README.md),
 [HV tower](assets/hv-tower/README.md), and
 [cryo station](assets/cryo-station/README.md).
-The [grid UI](assets/ui/README.md) is a browser study with simulated readings,
-not a connection to a running game.
+The [grid UI](assets/ui/README.md) is a browser prototype running the real C++
+core through WebAssembly, not a connection to a running game.
 
 ![Transformer concept render](assets/transformer/renders/hero.png)
 
