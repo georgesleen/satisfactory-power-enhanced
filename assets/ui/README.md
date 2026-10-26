@@ -1,61 +1,86 @@
-# Substation interaction prototype
+# Power building menus
 
-A standalone browser study of an Enhanced Power building menu. **Not Unreal, SML, or game integration.** All readings and events are simulated. Demo controls affect only the local example.
+A browser prototype of transformer, capacitor-bank and cryo-station interaction menus, plus a minimal vanilla power-pole extension mock. **Not Unreal, SML, or a connection to a running game.** Transformer transport, heat, capacitor energy and island loss run through the real engine-free C++ core compiled to WebAssembly. The cryo supply and pole topology remain clearly labeled concepts.
 
-## Preview
+## Build and preview
 
-From the repository root, with Python 3 available:
+From the repository root:
 
 ```sh
-python3 -m http.server 8765 --bind 127.0.0.1 --directory assets/ui
+nix develop .#ui -c make ui
+nix develop .#ui -c make ui-preview
 ```
 
-Open <http://127.0.0.1:8765/>. Stop with Ctrl+C. Source: `index.html`, `terminal.css`, `terminal.js`. No build, packages, external fonts, CDN, network APIs, or third-party JavaScript. The preview itself makes no external requests. SVG illustrations are original; no game logos or textures are included.
+Open <http://127.0.0.1:8080/>. Stop with Ctrl+C. Use `UI_PORT=8081` for a different loopback port. The separate UI shell supplies Emscripten and Python. The default development shell stays light and does not need Emscripten or licensed game tools.
 
-## Visual references
+To preview another tuning file without editing `tools/balance/tuning.json`, pass its path. Run `make ui` again afterwards to return to the real file.
 
-These wiki-hosted game screenshots are visual references, not runtime assets or claims of game integration:
+```sh
+nix develop .#ui -c make ui TUNING=/tmp/tuning.json
+```
 
-- [Power pole interface](https://satisfactory.wiki.gg/images/Power_pole_-_graph.png), from the [official wiki Power page](https://satisfactory.wiki.gg/wiki/Power): a large white plotting surface, simple colored graph legend/readings beneath it, and a compact adjacent storage module. This drives the default view's graph-first structure and three plain-language totals.
-- [Pipeline interface](https://satisfactory.wiki.gg/images/Pipeline_Water_content.png), from [Pipelines](https://satisfactory.wiki.gg/wiki/Pipelines): grouped physical gauge/readout/control modules, a thin window titlebar, and pale value plates. This drives the separate connection module, visual transformer illustration, simple heat bar, and capacitor readout. No copied dial or flush control is used.
-- [MAM general research interface, Update 3-8](https://satisfactory.wiki.gg/images/Update_8_-_MAM_4.png), from [MAM](https://satisfactory.wiki.gg/wiki/MAM): focused content with a narrow selection area and recognizable window chrome. This is explicitly a historical reference, not a claim about the latest game's MAM. The prototype uses a slim titlebar and a small set of familiar menu tabs rather than a telemetry wall.
+```sh
+nix build .#ui          # staged static browser package
+nix run .#ui -- --port 8081
+```
 
-The palette is an original pale gray modular interpretation with orange selections, not a pixel-perfect recreation. The default menu deliberately omits serial numbers, tier jargon, topology, equations and detailed diagnostics. Connections, event explanations and optional quality concepts are secondary views. It is a building interaction menu, not a control-room dashboard.
+`build/ui/` contains staged original browser sources, fonts, generated `wasm/core.js` and `wasm/core.wasm`. `build/ui-wasm/` contains the generated tuning header and C++ objects. Generated files are not committed. Serve the built directory, not the source directory. A missing or failed WASM module produces an explicit error, never authored fallback traces.
 
-## Interaction
+Source files: `index.html`, `menu.css`, `menu.js`, and `wasm/`. The browser makes no external requests. `wasm/generate_tuning.py` reads the tuning file at every build and records its path and SHA-256 in the snapshot; the transformer details show both. Ratings, thermal thresholds, bank limits and tier capacities are not copied into JavaScript.
 
-- **Power:** large production/usage history, power produced, power used, spare capacity, selected connection, one plain-language explanation, and a small capacitor bank module. The connection selector changes the inspected equipment.
-- **Connections:** a secondary generator -> railway -> substation -> factory/accelerator diagram. Select a connection to inspect it in Power. It shows connected areas, not solved individual-wire current.
-- **What happened?:** a plain-language cause and local consequence, recent events, and the two transformer traces.
-- **Power quality:** optional research presentation. A simple power-triangle explanation comes first; waveform/spectrum/frequency/PF illustrations are behind an expandable detail section.
-- **Try the demo:** normal operation, sustained factory overload, oversized accelerator spikes, and generator outage. Pause freezes the sample clock and histories. Restart clears the selected scenario's events/trip and starts at zero, preserving pause state. Neither control sends a game command.
+## Approved visual direction
 
-Tabs support Left/Right, Home and End. Native controls, visible keyboard focus, stable connection buttons and textual status accompany color. Event announcements occur only when an event is added, not on every sample tick. No smooth or flashing animation is used; reduced-motion rules are included. Smaller screens stack modules.
+The menus follow vanilla building interfaces: a compact building-name header, neutral molded instrument panels, operation lamp plus text, white circuit graph instruments, four-value legends, physical breaker controls and small value plates. There is no independent mod corporate identity, forced dashboard navigation or per-machine rule. Technical detail is collapsed.
 
-## Sample contract
+The transformer has separate input and output circuit modules. The capacitor bank reuses the graph and breaker components, with an energy gauge and charge/discharge plates. The cryo station has a cooling-supply slot and a superconducting-line schematic. The pole mock adds only tier, loading and a feeding-transformer row to a connection/graph surface. The outside capacity-preview control selects metadata; its graph and feeder stay labeled as the fixed LV simulation.
 
-One-second deterministic samples feed a rolling 60-second history. Pre-trigger history is normal operation. Ratings, loss and protection timing are authored design samples, not final balance or a physical grid/thermal solver.
+The implementation specification is [docs/ui-spec.md](../../docs/ui-spec.md): native widget seams, widget tree, dimensions, data, states, input, localization and required assets.
+
+## Controls and accessibility
+
+- Choose a building and scenario with the preview controls outside the building menu.
+- Pause freezes the core clock and graph history. Resume continues it. Restart resets the selected scenario and history, preserving pause state.
+- The transformer breaker disconnects its link. After a thermal trip it requests the core's genuine manual reset, rejected while too hot. Connecting does not clear a latched trip.
+- The capacitor breaker independently disconnects the bank and holds its stored energy. It does not disconnect the transformer. The bank status reads Charging, Discharging, Full, Idle, Empty or Disconnected from core values.
+- The cryo concept control previews cooled and cooling-lost states. No cooling quantity, rate, recipe, warm capacity, warm loss or warm trip value is invented. The connected-line plates read `Uncapped`, `N/A` and `0 MW` while cooled.
+- The pole menu has a read-only tier-capacity preview plate, preview loading and one feeding-transformer row. The graph and feeder labels, plus the condition strip, identify the fixed LV simulation. Native integration reads tier from network data; tier is not a pole setting.
+- The `Capacity preview` study button outside the window cycles LV, MV, HV and SC. Finite preview loading compares the actual LV consumption with the selected tier capacity. SC metadata assumes a cooled, uncapped line: capacity is `Uncapped`, loading is `N/A` with no meter. It does not change the fixture loss model or transformer rating.
+- Escape closes an open picker first, then the building menu. Closing moves focus to the reopen control. Opening focuses Close. Tab and Shift+Tab follow document order through the preview controls and the menu. Up/Down cycle visible menu or picker controls. Enter and Space activate native buttons.
+- Status text accompanies lamp colors. SVG graphs have current-value accessible descriptions. Meters expose values and units. Focus outlines are visible. There are no flashing effects, and reduced-motion preferences are respected.
+
+The display and rolling 60-second histories update at 4 Hz. Instrument, action and status nodes remain mounted between samples; only changed text, attributes and graph paths update. The layout changes only on building selection. The browser schedules 0.05-second core steps. The adapter subdivides at its generated tuning step and at each thermal time-constant boundary. Every subdivision advances the clock, also for a custom time constant that has no exact binary value. Wall-time accumulation is capped at 0.25 seconds per frame so returning from a background tab pauses elapsed simulation rather than causing a large catch-up jump.
+
+## Real-core scenarios and limits
 
 | Scenario | Behavior |
 | --- | --- |
-| Normal | 1,200 MW produced; 480 MW factory + 180 MW accelerator + 100 MW auxiliaries; 24 MW sample loss. The main view shows 784 MW power used, including that loss, leaving 416 MW spare. |
-| Factory overload | Factory requests 720 MW through a 600 MW connection. It heats, then trips at 18 s; accelerator remains supplied. |
-| Oversized spikes | Accelerator requests 540 MW at seconds 4-6 of each 8-second cycle. Buffer provides 100 MW; remaining 440 MW exceeds a 400 MW connection. That connection trips during its third peak at 22 s. Factory remains supplied. |
-| Generators offline | Production and downstream power fall to zero. Connections show loss of supply, not false local overload trips. The pulse buffer is isolated, not a modeled black-start source. |
+| Normal supply | Tuning-derived comfortable demand, actual capped transformer delivery, local loss and finite bank storage. No forced trip. |
+| Sustained overload | Requested demand exceeds the conservative link rating. The bank helps until empty. Unserved MW and a capacity warning appear. Ordinary saturation does not fabricate a thermal trip. |
+| Pulsed load | Tuning-derived demand alternates at the thermal time constant. Actual bank charge/discharge and unmet demand follow the core limits. |
+| Upstream outage | Primary supply disappears after one thermal time constant. Initially funded transformer escrow and bank energy carry the output briefly, then exhaust. This is supply loss, not a false overload trip. |
+| Empty grid | Demand and initial stored energy are zero. The transformer reads `No load`, not an outage. The graph is genuinely empty, not a prerecorded normal trace. |
+| Thermal test (imposed load) | A labeled, externally imposed thermal ratio exercises warning, trip and reset through `StepThermal`, `ClassifyThermal`, `TimeToTrip` and `TryResetThermal`. Electrical transport remains hard-capped separately. This is not end-to-end transient-overload behavior. |
 
-Power used includes upstream transformer transfer, auxiliary load and sample losses. Capacitor discharge is additional power delivered locally, not upstream consumption. The buffer begins at 0.75 MWh and falls by discharged MW times seconds / 3,600; no recharge sequence is modeled. Heat is an illustrative warning indicator, not temperature. Trips latch until demo restart.
+The adapter calls `PlanLink`, `SettleLink`, `StepBuffer` and `IslandLoss` for actual energy accounting. Transformer efficiency is explicitly unity because no conversion-efficiency tuning is specified. Escrow and capacitor initial energy are funded initial conditions, not created during the run. Snapshot details expose loss, storage, unserved demand and the cumulative energy residual.
 
-## Optional quality concepts
+**Core/gameplay gap:** `PlanLink` limits actual transfer to its rating. Heat driven by actual transfer therefore cannot produce an ordinary overload trip with the current thresholds. Delayed transient-overload capability is undecided. Local vanilla fuse behavior remains unknown until the separate real-game probe is run. The prototype does not change the core or invent a transport ceiling to hide that gap.
 
-These are not implemented or committed game mechanics:
+Cryo cooling is presentation-only. Only a cooled, uncapped, lossless SC line is modeled by current tuning. The pole has one simulated feeder, not discovered game topology. Optional electrical quality, PF, harmonic and frequency teaching dashboards from the older study have been removed; none are silently presented as implemented mechanics.
 
-- Sinusoidal teaching example: 700 MW + 500 Mvar requires 860.23 MVA, using 86% of a sample 1,000 MVA connection and leaving 139.77 MVA spare; PF is 0.814. This triangle assumes no harmonics and cannot alone determine distorted apparent power.
-- Normalized two-cycle current waveform and authored 50/150/250/350 Hz component amplitudes. Not an FFT or game measurement.
-- Reversible filtered/unfiltered comparison reduces selected harmonics and calculates residual current THD from those amplitudes. Voltage THD, resonance and real filter design are not modeled.
-- Separate illustrative fundamental-frequency recovery and true-PF history. These do not affect the main scenarios.
+## Visual sources and licensing
 
-MW is real power, MWh stored energy, Hz frequency, Mvar reactive power and MVA apparent power. Displacement PF describes fundamental phase; true PF also reflects distortion. A MW/MWh pulse-energy capacitor bank is not a reactive correction bank or a universal harmonic filter. No example creates free energy or assumes all fictional machines are inductive.
+Reference game captures and comparisons are kept only in untracked `notes/`; they are not runtime or public screenshot assets. Primary visual references:
 
-## Review captures
+- [Power Switch](https://satisfactory.wiki.gg/wiki/Power_Switch): dual circuits, white plotting modules, four-value legends, operation lamp and physical breaker.
+- [Power poles](https://satisfactory.wiki.gg/wiki/Power_Poles): compact connection and circuit surface.
+- [Pipeline Pump](https://satisfactory.wiki.gg/wiki/Pipeline_Pump): grouped physical gauges and white value plates. The retained pump reference is historical Early Access.
+- [Constructor](https://satisfactory.wiki.gg/wiki/Constructor): building-name header, functional grouping and production status. The retained screenshot is historical.
+- [MAM](https://satisfactory.wiki.gg/wiki/MAM): window chrome and focused hierarchy. Update 8 reference is historical; the recipe-choice 1.0 reference supplies a newer comparison.
 
-`renders/overview.png`, `renders/diagnostics.png`, and `renders/quality.png` are actual Chromium screenshots of this menu, not in-game renders. The default view is designed for 1280x900; optional detail views can scroll.
+Icons, instrument geometry and line diagrams are original SVG/CSS. No game logos, textures, screenshots or extracted UI assets are distributed. Roboto is a licensed browser substitute, not a claim about the game's proprietary font asset. Source: <https://github.com/google/fonts/tree/main/ofl/roboto>. The font and SIL Open Font License 1.1 are in `fonts/`.
+
+## Captures
+
+Tracked files under `renders/` show the earlier simulated-data study, not these menus. To inspect these menus, build and serve them with `nix develop .#ui -c make ui-preview`.
+
+For comparable captures, use Normal supply, pause after 62 seconds of real core history and collapse the details. Captures of the browser menus are not in-game captures.

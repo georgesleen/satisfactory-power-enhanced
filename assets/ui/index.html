@@ -1,77 +1,38 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Enhanced Power | Substation</title>
-  <link rel="stylesheet" href="terminal.css">
-  <script src="terminal.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Power building menus</title>
+<link rel="stylesheet" href="menu.css">
+<script src="wasm/core.js" defer></script>
+<script src="menu.js" defer></script>
 </head>
 <body>
-<div class="prototype-note">Enhanced Power <span>Interactive UI study / simulated data, not connected to a game</span></div>
-<div class="building-menu">
-  <header class="titlebar"><span class="building-icon" aria-hidden="true">EP</span><h1>Substation</h1><span>Western plateau</span></header>
-  <nav role="tablist" aria-label="Substation views">
-    <button role="tab" id="tab-overview" data-tab="overview" aria-controls="overview" aria-selected="true">Power</button>
-    <button role="tab" id="tab-islands" data-tab="islands" aria-controls="islands" aria-selected="false" tabindex="-1">Connections</button>
-    <button role="tab" id="tab-diagnostics" data-tab="diagnostics" aria-controls="diagnostics" aria-selected="false" tabindex="-1">What happened?</button>
-    <button role="tab" id="tab-quality" data-tab="quality" aria-controls="quality" aria-selected="false" tabindex="-1">Power quality <small>Optional concept</small></button>
-  </nav>
-  <main>
-    <section id="overview" role="tabpanel" aria-labelledby="tab-overview">
-      <div class="power-layout">
-        <article class="power-module">
-          <div class="module-heading"><h2>Power grid</h2><span id="grid-health">Power available</span></div>
-          <div class="graph-paper"><svg id="power-chart" class="chart" viewBox="0 0 1000 370" role="img" aria-label="Simulated power produced and used in megawatts over the last 60 seconds"></svg></div>
-          <div class="power-readings">
-            <div><span class="legend-label"><i class="production-key"></i>Power produced</span><strong id="production">1,200 <small>MW</small></strong></div>
-            <div><span class="legend-label"><i class="load-key"></i>Power used</span><strong id="load">784 <small>MW</small></strong></div>
-            <div><span class="legend-label"><i class="spare-key"></i>Spare capacity</span><strong id="headroom">416 <small>MW</small></strong></div>
-          </div>
-          <p class="graph-help" id="grid-explanation">Your grid has room to grow.</p>
-        </article>
-        <article class="equipment-module">
-          <label class="equipment-picker" for="equipment">Connection</label>
-          <select id="equipment"><option value="accelerator">Accelerator</option><option value="factory">Factory floor</option><option value="railway">Railway backbone</option><option value="generator">Generators</option></select>
-          <div class="equipment-illustration" aria-hidden="true"><svg viewBox="0 0 240 125"><path d="M31 100h178v10H31z" fill="#747a79"/><path d="M56 38h128v62H56z" fill="#bbc0bd" stroke="#69716f" stroke-width="3"/><path d="M65 48h110v43H65z" fill="#666f6c"/><path d="M76 49v41m13-41v41m13-41v41m36-41v41m13-41v41m13-41v41" stroke="#dc934e" stroke-width="6"/><path d="M83 38V20m74 18V20" stroke="#68726e" stroke-width="8"/><path d="M74 20h18m56 0h18" stroke="#c3cac5" stroke-width="5"/><rect x="105" y="62" width="29" height="20" fill="#e9e7dd"/><path d="m122 65-9 9h8l-5 6" fill="none" stroke="#b67b36" stroke-width="2"/></svg></div>
-          <h2 id="equipment-name">Accelerator feed</h2>
-          <p class="connection-status" id="equipment-status">Connected</p>
-          <div class="connection-reading"><strong id="equipment-load">180 / 400 MW</strong><span>Power through this connection</span></div>
-          <div class="heat-label"><span>Heat</span><span id="thermal-value">Normal</span></div><div class="heat-track"><div id="heat-fill"></div><i></i></div>
-          <p class="equipment-explanation" id="equipment-explanation">Plenty of room for this load. Short power spikes are helped by the nearby capacitor bank.</p>
-        </article>
-      </div>
-      <div class="buffer-module"><span class="buffer-drawing" aria-hidden="true">||</span><div><h3>Capacitor bank</h3><p>Helps smooth short power spikes at the accelerator.</p></div><div class="buffer-reading"><strong id="buffer-energy">0.75 MWh</strong><span id="buffer-state">Ready</span></div></div>
-      <details class="extra-details"><summary>More grid information</summary><p>Power used includes supply-side losses and excludes power discharged locally by the capacitor. Transmission loss: <strong id="loss">24 MW</strong>. All ratings and timings are illustrative, not final gameplay values.</p></details>
-    </section>
-    <section id="islands" role="tabpanel" aria-labelledby="tab-islands" hidden>
-      <div class="section-heading"><h2>Connected areas</h2><p>Choose a connection to see how it is doing.</p></div>
-      <div class="connection-map"><button class="connection-row" data-select="generator"><span class="area-symbol">G</span><span><b>Generators</b><small>Power enters the network here</small></span><strong id="generator-state">1,200 MW available</strong></button><div class="map-link">Higher-voltage transmission</div><button class="connection-row" data-select="railway"><span class="area-symbol">HV</span><span><b>Railway backbone</b><small>Brings power across the map</small></span><strong id="backbone-state">Connected</strong></button><div class="map-link">Substation connections</div><div class="local-connections"><button class="connection-row" data-select="factory"><span class="area-symbol">LV</span><span><b>Factory floor</b><small id="factory-note">480 MW served</small></span><strong id="factory-state">Connected</strong></button><button class="connection-row" data-select="accelerator"><span class="area-symbol">LV</span><span><b>Accelerator</b><small>With a local capacitor bank</small></span><strong id="accelerator-state">Connected</strong></button></div></div>
-      <p class="friendly-note">If one connection overheats and trips, the other areas can keep running. This diagram shows connected areas, not current along individual wires.</p>
-    </section>
-    <section id="diagnostics" role="tabpanel" aria-labelledby="tab-diagnostics" hidden>
-      <div class="section-heading"><h2 id="diagnostic-status">Everything is running normally</h2><p id="diagnostic-explanation"></p></div>
-      <div class="event-layout"><article class="light-panel"><h3>Recent events</h3><ol id="events" class="events" aria-live="polite" aria-relevant="additions"></ol></article><article class="light-panel"><h3>Why only one area?</h3><p>A transformer protects its own connection. Too much power heats it up; a lasting overload disconnects that area before the rest of the grid.</p><p>Add capacity or split the load for a sustained overload. A capacitor bank helps short spikes, not a continuous shortage.</p><details><summary>About this sample</summary><p>The factory trips after 18 seconds of continuous overload. The accelerator trips during its third oversized peak at 22 seconds. Resetting the demo restores either connection.</p></details></article></div>
-      <article class="diagnostic-graph"><h3>Power through each connection</h3><svg id="diagnostic-chart" class="chart" viewBox="0 0 1000 220" role="img" aria-label="Simulated factory and accelerator transformer transfers in megawatts over the last 60 seconds"></svg><p class="chart-legend"><span class="factory-key">Factory floor</span><span class="accelerator-key">Accelerator</span></p></article>
-    </section>
-    <section id="quality" role="tabpanel" aria-labelledby="tab-quality" hidden>
-      <div class="section-heading"><h2>A closer look at power</h2><p>Optional research concept. These illustrations do not represent implemented game mechanics.</p></div>
-      <details class="quality-lesson" open><summary>Power that does work, and power that fills the connection</summary><div class="triangle-layout"><svg viewBox="0 0 430 210" role="img" aria-label="Sinusoidal power triangle with 700 MW real, 500 Mvar reactive and 860.23 MVA apparent power"><path d="M55 155 H315 V45 Z" fill="#df8b3920" stroke="#b56c28" stroke-width="3"/><text x="180" y="182" text-anchor="middle">700 MW / useful power</text><text x="325" y="90">500 Mvar</text><text x="325" y="107">reactive</text><text x="140" y="65" transform="rotate(-23 140 65)">860.23 MVA / connection load</text></svg><div><h3>86% of a 1,000 MVA connection</h3><p>700 MW does useful work. Another 500 Mvar is reactive exchange. Together they occupy 860.23 MVA of this example connection, leaving 139.77 MVA spare.</p><p>Power factor compares useful power with connection load: 700 / 860.23 = 0.814. This simple triangle assumes smooth sine waves. With distortion, total apparent power needs more than this triangle.</p><p class="muted">Teaching example only. The main prototype still uses MW ratings.</p></div></div></details>
-      <details class="quality-deep"><summary>Explore waveforms, harmonics and frequency</summary>
-        <div class="quality-toolbar"><p>Compare a distorted current waveform with one filtered example.</p><button id="filter-toggle" aria-pressed="false">Show filtered example</button></div>
-        <div class="quality-grid">
-          <article class="light-panel"><h3>Current waveform</h3><svg id="waveform-chart" class="chart" viewBox="0 0 500 215" role="img" aria-label="Illustrative normalized current over 40 milliseconds"></svg><p>The solid teal line is the current. The dashed gray line is the 50 Hz fundamental. The plot shows two cycles, not a slow change in grid frequency.</p></article>
-          <article class="light-panel"><h3>Harmonic content</h3><svg id="spectrum-chart" class="chart" viewBox="0 0 500 215" role="img" aria-label="Authored current harmonic amplitudes at 50, 150, 250 and 350 hertz"></svg><p id="harmonic-explanation"></p></article>
-          <article class="light-panel"><h3>Fundamental frequency</h3><svg id="frequency-chart" class="chart" viewBox="0 0 500 215" role="img" aria-label="Illustrative frequency dip between 49 and 51 hertz over 60 seconds"></svg><p>A slow dip and recovery around 50 Hz. This is distinct from the higher-frequency components above.</p></article>
-          <article class="light-panel"><h3>Power factor over time</h3><svg id="factor-chart" class="chart" viewBox="0 0 500 215" role="img" aria-label="Illustrative true power factor between 0.7 and 1 over 60 seconds"></svg><p>A separate example: 460 MW / 500 MVA = 0.92 true PF. Displacement PF describes the fundamental's phase; distortion can also reduce true PF.</p></article>
-        </div>
-        <p class="friendly-note">Authored curves and component amplitudes, not measured game data or FFT results. Current THD uses only the shown harmonics; voltage THD and resonance are not modeled. The filtered example reduces selected harmonics, not every possible power-quality problem.</p>
-      </details>
-      <p class="friendly-note">The MW/MWh capacitor energy buffer handles short real-power spikes. A reactive correction bank (Mvar) is different, not a universal harmonic filter and never a source of free energy. No assumptions are made about fictional machine internals.</p>
-    </section>
-  </main>
-  <footer class="menu-footer"><span>Enhanced Power / browser concept</span><span id="clock">Demo: 0 s</span><span id="run-state">Running</span></footer>
-</div>
-<aside class="demo-controls" aria-label="Prototype demonstration controls"><span>Try the demo</span><label for="scenario" class="sr-only">Demo scenario</label><select id="scenario"><option value="steady">Normal operation</option><option value="overload">Too much factory load</option><option value="pulsed">Oversized power spikes</option><option value="outage">Generators offline</option></select><button id="pause" aria-pressed="false">Pause</button><button id="reset">Restart demo</button><small>Only changes this simulated example</small></aside>
+<svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="window" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 8h18M7 3v5"/></symbol>
+<symbol id="check" viewBox="0 0 32 32"><path d="M25 6a13 13 0 1 0 4 10M9 15l6 6L29 7"/></symbol>
+<symbol id="bolt" viewBox="0 0 24 24"><path d="m14 2-8 12h6l-2 8 8-12h-6z"/></symbol>
+<symbol id="arrow" viewBox="0 0 32 32"><path d="M3 11h15V4l12 12-12 12v-7H3z"/></symbol>
+<symbol id="heat" viewBox="0 0 24 24"><path d="M9 5a3 3 0 0 1 6 0v9a5 5 0 1 1-6 0zM12 7v11"/></symbol>
+<symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 6v1"/></symbol>
+<symbol id="warning" viewBox="0 0 32 32"><path d="M16 3 30 28H2zM16 10v10M16 23v2"/></symbol>
+<symbol id="snow" viewBox="0 0 32 32"><path d="M16 2v28M4 9l24 14M4 23 28 9M11 5l5 5 5-5M11 27l5-5 5 5M4 15l7-2-1-7M28 17l-7 2 1 7M4 17l7 2-1 7M28 15l-7-2 1-7"/></symbol>
+<symbol id="storage" viewBox="0 0 32 32"><rect x="3" y="7" width="24" height="18" rx="2"/><path d="M27 12h3v8h-3M10 11v10M16 11v10M22 11v10"/></symbol>
+</defs></svg>
+<nav class="preview-toolbar" aria-label="Preview controls">
+<div class="preview-picker"><button id="building-picker" aria-expanded="false" aria-controls="building-options">Building: <span>Transformer</span><b aria-hidden="true">&#9662;</b></button><div id="building-options" class="picker-options" hidden><button data-building="transformer">Transformer</button><button data-building="capacitor">Capacitor bank</button><button data-building="cryo">Cryo station</button><button data-building="pole">Power pole</button></div></div>
+<div class="preview-picker"><button id="scenario-picker" aria-expanded="false" aria-controls="scenario-options">Scenario: <span>Normal supply</span><b aria-hidden="true">&#9662;</b></button><div id="scenario-options" class="picker-options" hidden><button data-scenario="0">Normal supply</button><button data-scenario="5">Sustained overload</button><button data-scenario="2">Pulsed load</button><button data-scenario="3">Upstream outage</button><button data-scenario="4">Empty grid</button><button data-scenario="1">Thermal test (imposed load)</button></div></div>
+<button id="pause" disabled>Pause</button><button id="restart" disabled>Restart</button>
+<span id="preview-status">Loading real C++ core...</span>
+</nav>
+<main class="interaction-window" aria-labelledby="building-name" hidden>
+<header class="window-header"><svg aria-hidden="true"><use href="#window"/></svg><h1 id="building-name">Transformer</h1><button class="close" aria-label="Close building menu">&times;</button></header>
+<div class="equipment-body"><section class="operation-column" aria-label="Building controls"></section><section class="circuit-column" aria-label="Building instruments"></section></div>
+<div class="condition-strip"><svg aria-hidden="true"><use href="#info"/></svg><p id="condition"></p></div>
+<details class="technical"><summary>Transformer details</summary><div id="technical-content"></div></details>
+</main>
+<button id="reopen" hidden>Open building menu</button>
+<aside class="review-note">BROWSER PROTOTYPE<span id="runtime-note">Real core simulation. No game connection.</span></aside>
 </body>
 </html>
