@@ -32,7 +32,7 @@ void PrintLoss(const char* Label, const IslandGraph& Graph, Megawatts Mean, cons
 			{
 				continue;
 			}
-			const Megawatts Loss = IslandLoss(Tier.Parameters, Mean, Lengths[Proxy]);
+			const Megawatts Loss = TierLoss(Tier, Mean, Lengths[Proxy]);
 			std::cout << ' ' << Tier.Name << "MW=" << Loss.Value << ' ' << Tier.Name
 			          << "Percent=" << Percent * (Loss / Mean);
 		}
@@ -43,7 +43,11 @@ void PrintLoss(const char* Label, const IslandGraph& Graph, Megawatts Mean, cons
 void PrintFactory(const Scenario& Description, const BuildingTable& Buildings, const Tuning& Tuning)
 {
 	const Factory Local = BuildFactory(Description, Buildings);
-	const TierParameters& LowVoltage = Tuning.Tier("LV").Parameters;
+	if (!Tuning.Tier("LV").Loss)
+	{
+		throw std::runtime_error("tier 'LV' needs a capacity");
+	}
+	const TierParameters& LowVoltage = *Tuning.Tier("LV").Loss;
 	const double PeakFraction = Local.Peak / LowVoltage.Capacity;
 	std::cout << "SCENARIO " << Description.File << " name=\"" << Description.Name
 	          << "\" tier=" << Description.MilestoneTier << '\n';
@@ -85,8 +89,7 @@ void PrintFactory(const Scenario& Description, const BuildingTable& Buildings, c
 				    Description.Supply->X - Description.Entry.X, Description.Supply->Y - Description.Entry.Y,
 				    Description.Supply->Z - Description.Entry.Z));
 				Trunk.Edges.push_back({0, 1, Meters{Length}});
-				const Megawatts TrunkLoss =
-				    IslandLoss(Tier.Parameters, Local.Mean + LocalLoss, Distances(Trunk)[Proxy]);
+				const Megawatts TrunkLoss = TierLoss(Tier, Local.Mean + LocalLoss, Distances(Trunk)[Proxy]);
 				std::cout << "  SPLIT tier=" << Tier.Name << " proxy=" << ProxyNames[Proxy]
 				          << " localLossMW=" << LocalLoss.Value << " trunkLossMW=" << TrunkLoss.Value
 				          << " totalLossPercent=" << Percent * ((LocalLoss + TrunkLoss) / Local.Mean) << '\n';
@@ -123,7 +126,15 @@ void PrintPlant(const Scenario& Description, const std::filesystem::path& Direct
 	          << " exportPeakMW=" << Peak.Value;
 	for (const TierTuning& Tier : Tuning.Tiers)
 	{
-		std::cout << ' ' << Tier.Name << "peakPercent=" << Percent * (Peak / Tier.Parameters.Capacity);
+		std::cout << ' ' << Tier.Name << "peakPercent=";
+		if (Tier.Loss)
+		{
+			std::cout << Percent * (Peak / Tier.Loss->Capacity);
+		}
+		else
+		{
+			std::cout << "n/a";
+		}
 	}
 	std::cout << '\n';
 	PrintLoss("aggregate", Plant.Graph, Plant.Mean, Tuning, Description.MilestoneTier);
@@ -168,9 +179,17 @@ int main(int ArgumentCount, char** Arguments)
 		std::cout << std::fixed << std::setprecision(3);
 		for (const TierTuning& Tier : Settings.Tiers)
 		{
-			std::cout << "TUNING tier=" << Tier.Name << " capacityMW=" << Tier.Parameters.Capacity.Value
-			          << " referenceDistanceM=" << Tier.Parameters.ReferenceDistance.Value
-			          << " referenceLossFraction=" << Tier.Parameters.ReferenceLossFraction << '\n';
+			std::cout << "TUNING tier=" << Tier.Name;
+			if (Tier.Loss)
+			{
+				std::cout << " capacityMW=" << Tier.Loss->Capacity.Value
+				          << " referenceDistanceM=" << Tier.Loss->ReferenceDistance.Value
+				          << " referenceLossFraction=" << Tier.Loss->ReferenceLossFraction << '\n';
+			}
+			else
+			{
+				std::cout << " capacityMW=uncapped loss=none\n";
+			}
 		}
 		for (const TransformerSize& Transformer : Settings.Transformers)
 		{

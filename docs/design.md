@@ -56,7 +56,7 @@ design the challenge and its competing solutions in the same playtest.
 | Harmonic mitigation | Solve a demonstrable converter-district loading or waveform problem | Filtering, isolation, or layout changes; not an abstract pollution tax |
 | AC synchronization | Share supply and reserves between independent grids | Keep local reserves or use asynchronous exchange; joining can spread disturbances |
 | HVDC | Exchange power without coupling frequency and phase | AC sharing or isolation; converter capacity, cost, and losses |
-| SC | Compact high-capacity, efficient transmission | Cooling logistics and build cost; HV remains a viable alternative |
+| SC | Compact zero-loss transmission with no capacity cap | Cooling logistics and build cost; HV remains a viable alternative |
 
 Reject arbitrary cryo-station spacing chores, research needed merely to remove
 inflated loss penalties, and compulsory synchronization boxes with no decision.
@@ -73,7 +73,7 @@ unpleasant baseline.
 | LV | Vanilla power line | Start | Ordinary wiring throughout a reasonably sized factory |
 | MV | New | Tier 3 (coal power) | Aggregating factories and generator sites; regional links |
 | HV | New wire and railways | Tier 6 (trains) | Long-distance transmission and larger shared backbones |
-| SC | Superconductor | Tier 8 or 9 | Zero-loss, high-capacity trunk lines |
+| SC | Superconductor | Tier 8 or 9 | Zero-loss trunk lines with no capacity cap |
 
 Machines connect at LV, as in vanilla. Vanilla wires must comfortably support a
 single reasonably sized factory, including ordinary overclocking and normal
@@ -81,11 +81,11 @@ pulses. A transformer per machine or small production block is not the intended
 play loop. MV and HV earn their place through distance and aggregation, not
 artificially cramped local wiring.
 
-Each tier has a capacity. A large generator plant collecting output for several
-factories can outgrow LV; this does not mean an ordinary factory or small local
-generator site must upgrade. Capacity values remain open and must pass the
-[balance acceptance scenarios](#balance-acceptance-scenarios), not an invented
-fixed MW cap.
+LV, MV, and HV each have a capacity. A large generator plant collecting output
+for several factories can outgrow LV; this does not mean an ordinary factory or
+small local generator site must upgrade. Capacity values remain open and must
+pass the [balance acceptance scenarios](#balance-acceptance-scenarios), not an
+invented fixed MW cap. SC has no capacity; see [Superconductors](#superconductors).
 
 ### Railways
 
@@ -103,8 +103,8 @@ mod does not add a second regeneration source.
 
 A tier-island is a set of connected lines and buildings on one tier.
 Transformers are the only links between islands. The capacity of an island is
-the capacity of its tier. The mod solves power flow between islands only, not
-along each line.
+the capacity of its tier. A cooled SC island has no capacity. The mod solves
+power flow between islands only, not along each line.
 
 ### Transformers
 
@@ -173,12 +173,15 @@ alone do not establish their electrical power factor.
 
 ### Superconductors
 
-Late-game wire (Tier 8 or 9) with zero loss and very high capacity. It is the
-reward for building out a full grid.
+Late-game wire (Tier 8 or 9) with zero loss and no capacity cap. It is the
+reward for building out a full grid. The transformers at each end of an SC line
+limit the power that it carries. The line stays superconducting only while its
+cooling supply lasts.
 
 Superconducting lines need cooling. Cryo stations along the line consume a
-cooling supply (nitrogen or Cooling Systems). A line without cooling acts as a
-normal line with high loss.
+cooling supply (nitrogen or Cooling Systems). The cooling supply does not set a
+capacity. A line without cooling stops superconducting and becomes a lossy
+line. It can trip; see [Open decisions](#open-decisions).
 
 A pioneer on a zipline moves faster on a higher tier. On an SC line, the
 zipline is fast travel.
@@ -189,7 +192,7 @@ zipline is fast travel.
 |---|---|---|
 | HV wire | Cheap and flexible | Loss over distance; towers to build |
 | Railway | Free with the train network | Capacity limited by the station transformer |
-| SC line | Zero loss, very high capacity, fast zipline travel | Expensive; needs a cooling supply |
+| SC line | Zero loss, no capacity cap, fast zipline travel | Expensive; needs a cooling supply |
 
 ### Diagnostic tool and overlay
 
@@ -332,6 +335,10 @@ ratings, costs, unlocks, and whether these mechanics ship remain open.
   factories.
 - **Four tiers:** LV, MV, HV, SC.
 - **Superconductors consume a cooling supply.**
+- **SC lines have no capacity cap.** The transformers at each end limit an SC
+  line, and the line needs its cooling supply to stay superconducting. A
+  capacity that scales with cooling is rejected, because it turns cooling into
+  a dial to tune.
 - **LV factory comfort.** Ordinary factories, overclocking, and normal pulses
   fit vanilla wiring; higher tiers address distance and aggregation.
 - **Capacitors are optional peak support**, not a requirement per machine.
@@ -340,15 +347,21 @@ ratings, costs, unlocks, and whether these mechanics ship remain open.
 
 ## Open decisions
 
-1. **Tier capacities**, the station transformer rating, and the exact SC
-   milestone.
+1. **Tier capacities** for LV, MV, and HV, the station transformer rating, and
+   the exact SC milestone.
 2. **Engine hooks.** The power probe in `Source/EnhancedPower/` measures the
    vanilla solve order and callback semantics on a dedicated server.
 3. **Cooling supply.** Which items or fluids, the rate, and the station
    spacing.
-4. **Loss distance metric.** Total wire length versus spatial extent or a
+4. **Uncooled SC line.** A line without cooling becomes a lossy line. It needs
+   its loss constants: a reference load, a
+   reference distance, and a reference loss fraction. The reference load only
+   scales the loss formula; it is not a capacity. It is also open whether the
+   lossy line has an overload limit, and how fast a line loses and regains
+   superconduction.
+5. **Loss distance metric.** Total wire length versus spatial extent or a
    path-length proxy, subject to the compact-factory acceptance scenarios.
-5. **Power quality and frequency.** Prototype frequency/inertia, displacement
+6. **Power quality and frequency.** Prototype frequency/inertia, displacement
    and true power factor, harmonic diagnostics, and synchronization/intertie
    choices against the candidate gates above. None is committed gameplay or a
    prerequisite for the core grid.

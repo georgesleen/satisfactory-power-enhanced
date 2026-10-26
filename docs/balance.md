@@ -98,7 +98,13 @@ every factory.
 | LV | 0 | 12000 | 1000 | 0.12 |
 | MV | 3 | 48000 | 1000 | 0.08 |
 | HV | 6 | 192000 | 1000 | 0.02 |
-| SC | 9 | 768000 | 1000 | 0 |
+| SC | 9 | uncapped | none | none |
+
+SC has no capacity. Its `capacityMegawatts` is `null`, and it has no loss
+reference fields. The CLI reports zero loss for an uncapped tier and prints
+`n/a` for its load against capacity, for example
+`SCpeakPercent=n/a` in the collection rows. The tool models only a cooled SC
+line; an uncooled line has no tuning yet.
 
 | Parameter | Initial value |
 | --- | --- |
@@ -119,7 +125,7 @@ LV has late-game headroom instead of a small early-game cap. An ordinary quantum
 module peaks at 50.310% of LV capacity. Even the extreme district peaks at
 79.083%. MV earns its early role through regional loss reduction. HV earns its
 role through long-distance shared transport, not through cramped local wiring.
-SC's capacity and zero-loss benefit need a larger-grid and cooling-cost playtest.
+SC's zero-loss benefit and its cooling cost need a larger-grid playtest.
 
 The transformer sizes are choices, not one mandatory sequence. A local unit
 fits the early component examples. A district unit serves the aluminum campus
@@ -282,8 +288,8 @@ throughput, unlocks, clearances, and construction costs need a playtest.
   collection when choosing representative load weights for the distance proxy.
 - The capacity headroom at early milestones is deliberate. Confirm that MV
   construction cost is worth regional loss savings without making LV unpleasant.
-- Confirm SC capacity, cooling consumption, and construction cost against larger
-  export grids. The shown plant does not establish its final capacity limit.
+- Confirm SC cooling consumption and construction cost against larger export
+  grids. Define the loss constants and trip rules for an uncooled SC line.
 - The minimum storage search uses the longest recipe cycle as its tail window.
   Mixed incommensurate recipe periods need a suitable observation window rather
   than treating that window as a proven repeat period.

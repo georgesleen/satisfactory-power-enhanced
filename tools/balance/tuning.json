@@ -4,7 +4,7 @@
     {"name": "LV", "unlockTier": 0, "capacityMegawatts": 12000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0.12},
     {"name": "MV", "unlockTier": 3, "capacityMegawatts": 48000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0.08},
     {"name": "HV", "unlockTier": 6, "capacityMegawatts": 192000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0.02},
-    {"name": "SC", "unlockTier": 9, "capacityMegawatts": 768000, "referenceDistanceMeters": 1000, "referenceLossFraction": 0}
+    {"name": "SC", "unlockTier": 9, "capacityMegawatts": null}
   ],
   "transformers": [
     {"name": "local", "ratingMegawatts": 2000},

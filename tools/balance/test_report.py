@@ -42,6 +42,11 @@ assert float(remote["LVPercent"]) > float(local["LVPercent"]) * 5
 assert float(remote["LVPercent"]) > float(mv["totalLossPercent"]) > float(hv["totalLossPercent"])
 plant = row("12-central-plant.json", "PLANT ")
 assert float(plant["LVpeakPercent"]) > 100 > float(plant["MVpeakPercent"])
+assert plant["SCpeakPercent"] == "n/a"
+assert "TUNING tier=SC capacityMW=uncapped loss=none" in report
+sc_loss = row("12-central-plant.json", "LOSS aggregate proxy=LoadWeightedFeedDistance ")
+assert float(sc_loss["SCMW"]) == 0
+assert float(sc_loss["SCPercent"]) == 0
 regional = row("13-regional-plant.json", "LOSS aggregate proxy=LoadWeightedFeedDistance ")
 assert float(regional["LVPercent"]) > float(regional["MVPercent"]) * 5
 

@@ -24,12 +24,13 @@ invalidate healthy LV wiring, and HV should remain viable beside cooled SC.
 | LV | Familiar local wiring throughout a factory |
 | MV | Combine factories or generator sites and make regional links, starting around coal power |
 | HV | Long-distance wire or railway transmission, starting around trains |
-| SC | Late-game, high-capacity, zero-loss transmission with a cooling supply |
+| SC | Late-game, zero-loss transmission with no capacity cap and a cooling supply |
 
 Higher tiers solve distance and aggregation. A large plant exporting power to
 several factories can justify a higher-tier backbone; that does not make higher
-tiers mandatory inside each factory. Final capacities will be tuned against
-vanilla and Satisfactory Plus production at their respective milestones.
+tiers mandatory inside each factory. Final LV, MV, and HV capacities will be
+tuned against vanilla and Satisfactory Plus production at their respective
+milestones.
 
 ## A simple shared grid
 
@@ -92,10 +93,11 @@ and affect MVA loading. Power-factor correction would not supply free real
 energy or remove all harmonic distortion.
 
 SC lines instead need cryo stations consuming a cooling supply. With cooling,
-they offer zero-loss, high-capacity transmission and fast zipline travel.
-Without cooling, they behave as normal lines with high loss. The cooling item
-or fluid, consumption rate, station spacing, and exact late-game unlock are
-not settled.
+they offer zero-loss transmission with no capacity cap and fast zipline travel.
+The transformers at each end limit the power that an SC line carries. Without
+cooling, a line stops superconducting and becomes a lossy line, which can trip.
+The warm-state loss parameters, cooling item or fluid, consumption rate, station
+spacing, and exact late-game unlock are not settled.
 
 ## Optional depth is not a requirement
 

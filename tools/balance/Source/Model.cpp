@@ -105,6 +105,11 @@ const TransformerSize& Tuning::Transformer(const std::string& Name) const
 	throw std::runtime_error("unknown transformer '" + Name + "'");
 }
 
+Megawatts TierLoss(const TierTuning& Tier, Megawatts Load, Meters Distance)
+{
+	return Tier.Loss ? IslandLoss(*Tier.Loss, Load, Distance) : Megawatts{};
+}
+
 BuildingTable LoadBuildingTable(const std::filesystem::path& Path)
 {
 	const Json Root = ReadJson(Path);
@@ -141,9 +146,20 @@ Tuning LoadTuning(const std::filesystem::path& Path)
 		TierTuning Tier;
 		Tier.Name = Value.at("name").get<std::string>();
 		Tier.UnlockTier = Value.at("unlockTier").get<int>();
-		Tier.Parameters.Capacity = Megawatts{Value.at("capacityMegawatts").get<double>()};
-		Tier.Parameters.ReferenceDistance = Meters{Value.at("referenceDistanceMeters").get<double>()};
-		Tier.Parameters.ReferenceLossFraction = Value.at("referenceLossFraction").get<double>();
+		const Json& Capacity = Value.at("capacityMegawatts");
+		if (Capacity.is_null())
+		{
+			if (Value.contains("referenceDistanceMeters") || Value.contains("referenceLossFraction"))
+			{
+				throw std::runtime_error("uncapped tier '" + Tier.Name + "' has no loss reference");
+			}
+		}
+		else
+		{
+			Tier.Loss = TierParameters{Megawatts{Capacity.get<double>()},
+			                           Meters{Value.at("referenceDistanceMeters").get<double>()},
+			                           Value.at("referenceLossFraction").get<double>()};
+		}
 		Result.Tiers.push_back(Tier);
 	}
 	for (const Json& Value : Root.at("transformers"))

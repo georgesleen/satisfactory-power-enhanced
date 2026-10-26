@@ -45,9 +45,13 @@ struct BuildingTable
 struct TierTuning
 {
 	std::string Name;
-	TierParameters Parameters;
+	/// Loss constants of a capped tier; empty for an uncapped tier, which has no loss.
+	std::optional<TierParameters> Loss;
 	int UnlockTier = 0;
 };
+
+/// Transmission loss of one island on a tier; zero on an uncapped tier.
+Megawatts TierLoss(const TierTuning& Tier, Megawatts Load, Meters Distance);
 
 /// One transformer size from the tuning catalog.
 struct TransformerSize
