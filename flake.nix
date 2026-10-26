@@ -18,6 +18,48 @@
       wwiseCli = import ./nix/wwise-cli.nix { inherit pkgs; };
       serverTools = import ./nix/server.nix { inherit pkgs; };
 
+      uiSource = lib.fileset.toSource {
+        root = ./.;
+        fileset = lib.fileset.unions [
+          ./Makefile
+          ./assets/ui
+          ./Source/EnhancedPowerCore
+          ./tools/balance/tuning.json
+        ];
+      };
+      uiPackage = pkgs.stdenvNoCC.mkDerivation {
+        pname = "enhanced-power-ui";
+        version = "0";
+        src = uiSource;
+        nativeBuildInputs = [
+          pkgs.emscripten
+          pkgs.gnumake
+          pkgs.python3
+        ];
+        dontConfigure = true;
+        buildPhase = ''
+          runHook preBuild
+          export EM_CACHE="$TMPDIR/emscripten-cache"
+          cp -r ${pkgs.emscripten}/share/emscripten/cache "$EM_CACHE"
+          chmod -R u+w "$EM_CACHE"
+          make ui
+          runHook postBuild
+        '';
+        installPhase = ''
+          runHook preInstall
+          mkdir -p "$out/share/enhanced-power-ui"
+          cp -r build/ui/. "$out/share/enhanced-power-ui/"
+          runHook postInstall
+        '';
+      };
+      uiPreview = pkgs.writeShellApplication {
+        name = "enhanced-power-ui";
+        runtimeInputs = [ pkgs.python3 ];
+        text = ''
+          exec python3 -B ${./assets/ui/wasm/preview.py} ${uiPackage}/share/enhanced-power-ui "$@"
+        '';
+      };
+
       # The licensed Wwise payload exists only after a local import records its hash.
       wwiseLocked = builtins.pathExists ./nix/wwise-source.json;
       wwise = import ./nix/wwise.nix { inherit pkgs; };
@@ -50,6 +92,8 @@
           ./CMakeLists.txt
           ./Source/EnhancedPowerCore
           ./Tests/Core
+          ./Tests/Assets
+          ./assets/common/unreal_import_smoke.py
           (lib.fileset.maybeMissing ./tools/balance)
         ];
       };
@@ -241,6 +285,8 @@
         server-run = serverTools.run;
         server-smoke = serverTools.smoke;
         sml-server = serverTools.sml;
+        ui = uiPackage;
+        ui-preview = uiPreview;
       }
       // lib.optionalAttrs wwiseLocked { inherit wwise; };
 
@@ -272,6 +318,23 @@
               pkgs.gnumake
               pkgs.git
             ];
+        };
+
+        # Browser prototype with the engine-free C++ core compiled to WASM.
+        ui = pkgs.mkShellNoCC {
+          packages = [
+            pkgs.emscripten
+            pkgs.gnumake
+            pkgs.python3
+          ];
+          shellHook = ''
+            export EM_CACHE="$PWD/build/emscripten-cache"
+            if [ ! -d "$EM_CACHE" ]; then
+              mkdir -p "$(dirname "$EM_CACHE")"
+              cp -r ${pkgs.emscripten}/share/emscripten/cache "$EM_CACHE"
+              chmod -R u+w "$EM_CACHE"
+            fi
+          '';
         };
 
         # Vendor acquisition tools; needs no licensed payload.
@@ -339,6 +402,11 @@
           type = "app";
           program = "${serverTools.smoke}/bin/sf-server-smoke";
           meta.description = "Dedicated-server integration smoke check";
+        };
+        ui = {
+          type = "app";
+          program = "${uiPreview}/bin/enhanced-power-ui";
+          meta.description = "Loopback browser preview with the C++ core";
         };
       };
     };

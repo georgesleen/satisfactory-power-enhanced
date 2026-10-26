@@ -25,6 +25,11 @@ target_link_libraries(enhanced_power_core_tests PRIVATE enhanced_power_core doct
 enable_testing()
 add_test(NAME enhanced_power_core_tests COMMAND enhanced_power_core_tests)
 
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+add_test(NAME enhanced_power_delivery_integrity
+  COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/Tests/Assets/DeliveryIntegrityTests.py"
+)
+
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tools/balance/CMakeLists.txt")
   add_subdirectory(tools/balance)
 endif()
